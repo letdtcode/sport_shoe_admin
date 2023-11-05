@@ -79,7 +79,7 @@ export const productDeleteAction = (id) => async (dispatch, getState) => {
     await axios.delete(`${URL}/api/v1/products/${id}/delete`, config);
 
     dispatch({ type: PRODUCT_DELETE_SUCCESS });
-    toast.success("Xoá sản phẩm thành công!", ToastObjects);
+    toast.success("Product deletion successful!", ToastObjects);
   } catch (error) {
     const message =
       error.response && error.response.data.message
@@ -90,7 +90,7 @@ export const productDeleteAction = (id) => async (dispatch, getState) => {
       type: PRODUCT_DELETE_FAIL,
       payload: message,
     });
-    toast.error("Không thể xoá sản phẩm !", ToastObjects);
+    toast.error("Can't delete products!", ToastObjects);
   }
 };
 
@@ -118,7 +118,7 @@ export const productCreateAction =
       );
 
       dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data });
-      toast.success("Tạo sản phẩm thành công!", ToastObjects);
+      toast.success("Create successful products!", ToastObjects);
     } catch (error) {
       const message =
         error.response && error.response.data.message

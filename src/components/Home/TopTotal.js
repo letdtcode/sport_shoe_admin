@@ -19,7 +19,7 @@ const TopTotal = (props) => {
             </span>
             <div className="text">
               <Heading as="h6" size="sm" className="mb-1">
-                Tổng doanh thu
+              Total revenue
               </Heading>
               <span>${totalSale.toFixed()}</span>
             </div>
@@ -34,7 +34,7 @@ const TopTotal = (props) => {
             </span>
             <div className="text">
               <Heading as="h6" size="sm" className="mb-1">
-                Tổng đơn hàng
+                Total orders
               </Heading>
               <span>
                 {orders ? <span>{orders.length}</span> : <span>0</span>}
@@ -51,7 +51,7 @@ const TopTotal = (props) => {
             </span>
             <div className="text">
               <Heading as="h6" size="sm" className="mb-1">
-                Tổng sản phẩm
+              Total products
               </Heading>
               <span>
                 {products ? <span>{products.length}</span> : <span>0</span>}

@@ -5,7 +5,7 @@ export default function Loading() {
     <div className="d-flex justify-content-center">
       <VStack>
         <Spinner />
-        <Text fontSize="18px">Đang tải...</Text>
+        <Text fontSize="18px">Loading...</Text>
       </VStack>
     </div>
   );

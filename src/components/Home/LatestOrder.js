@@ -8,7 +8,7 @@ const LatestOrder = (props) => {
   const { loading, error, orders } = props;
   return (
     <div className="card-body">
-      <h5 className="card-title">Đơn hàng mới nhất</h5>
+      <h5 className="card-title">Latest orders</h5>
       {loading ? (
         <Loading />
       ) : error ? (
@@ -18,13 +18,13 @@ const LatestOrder = (props) => {
           <table className="table">
             <thead>
               <tr>
-                <th scope="col">Tên</th>
+                <th scope="col">Name</th>
                 <th scope="col">Email</th>
-                <th scope="col">Tổng tiền</th>
-                <th scope="col">Tình trạng</th>
-                <th scope="col">Ngày tạo</th>
+                <th scope="col">Total price</th>
+                <th scope="col">Status</th>
+                <th scope="col">Created at</th>
                 <th scope="col" className="text-end">
-                  Hành động
+                  Action
                 </th>
               </tr>
             </thead>
@@ -39,11 +39,11 @@ const LatestOrder = (props) => {
                   <td>
                     {order.isPaid ? (
                       <span className="badge rounded-pill alert-success">
-                        Đã thanh toán {moment(order.paidAt).format("LLL")}
+                        Paid {moment(order.paidAt).format("LLL")}
                       </span>
                     ) : (
                       <span className="badge rounded-pill alert-danger text-danger">
-                        Chưa thanh toán
+                        Unpaid
                       </span>
                     )}
                   </td>

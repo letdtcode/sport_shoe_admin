@@ -11,7 +11,7 @@ const OrderMain = () => {
     <Stack className="content-main">
       <Box className="content-header">
         <Heading as="h2" size="lg" className="content-title">
-          Đơn hàng
+          Orders
         </Heading>
       </Box>
 
@@ -21,23 +21,23 @@ const OrderMain = () => {
             <div className="col-lg-4 col-md-6 me-auto">
               <input
                 type="text"
-                placeholder="Tìm kiếm..."
+                placeholder="Search..."
                 className="form-control p-2"
               />
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <select className="form-select">
-                <option>Tình trạng</option>
-                <option>Đang hoạt động</option>
+                <option>Status</option>
+                <option>Active</option>
                 <option>Disabled</option>
-                <option>Xem tất cả</option>
+                <option>View all</option>
               </select>
             </div>
             <div className="col-lg-2 col-6 col-md-3">
               <select className="form-select">
-                <option>Xem 20</option>
-                <option>Xem 30</option>
-                <option>Xem 40</option>
+                <option>View 20</option>
+                <option>View 30</option>
+                <option>View 40</option>
               </select>
             </div>
           </div>

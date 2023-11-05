@@ -67,7 +67,7 @@ const AddProductMain = () => {
       <Toast />
       <Stack className="content-main" style={{ maxWidth: "1200px" }}>
         <Heading as="h2" size="xl" className="content-title mb-4">
-          Thêm sản phẩm
+          Add product
         </Heading>
         <form onSubmit={submitHandler}>
           <div className="content-header">
@@ -83,12 +83,12 @@ const AddProductMain = () => {
                   {error && <Message variant="alert-danger">{error}</Message>}
                   {loading && <Loading />}
                   <div className="mb-4">
-                    <label htmlFor="product_title" className="form-label">
-                      Tên sản phẩm
+                    <label htmlFor="product_title" className="form-label">             
+                      Product's name
                     </label>
                     <input
                       type="text"
-                      placeholder="Nhập tên sản phẩm"
+                      placeholder="Enter the product name"
                       className="form-control"
                       id="product_title"
                       value={name}
@@ -112,7 +112,7 @@ const AddProductMain = () => {
                   </div>
                   <div className="mb-4">
                     <label htmlFor="product_quantity" className="form-label">
-                      Số lượng
+                      Quantity
                     </label>
                     <input
                       type="number"
@@ -126,10 +126,10 @@ const AddProductMain = () => {
                   </div>
                   <div className="mb-4">
                     <label htmlFor="product_category" className="form-label">
-                      Danh mục
+                      Category
                     </label>
                     <Select
-                      placeholder="Vui lòng chọn danh mục"
+                      placeholder="Choose a category"
                       value={category}
                       onChange={(e) => console.log(setCategory(e.target.value))}
                     >
@@ -141,9 +141,9 @@ const AddProductMain = () => {
                     </Select>
                   </div>
                   <div className="mb-4">
-                    <label className="form-label">Mô tả</label>
+                    <label className="form-label">Description</label>
                     <textarea
-                      placeholder="Nhập mô tả sản phẩm"
+                      placeholder="Enter product description"
                       className="form-control"
                       rows="7"
                       value={description}
@@ -152,7 +152,7 @@ const AddProductMain = () => {
                     ></textarea>
                   </div>
                   <div className="mb-4">
-                    <label className="form-label">Hình ảnh</label>
+                    <label className="form-label">Image</label>
                     <input
                       className="form-control"
                       type="text"

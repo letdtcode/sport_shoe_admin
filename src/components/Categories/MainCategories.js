@@ -8,7 +8,7 @@ const MainCategories = () => {
     <Stack className="content-main">
       <Box className="content-header">
         <Heading as="h2" size="md" className="content-title">
-          Danh mục
+          Category
         </Heading>
       </Box>
 

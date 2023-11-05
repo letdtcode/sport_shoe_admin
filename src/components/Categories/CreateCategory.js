@@ -43,7 +43,7 @@ const CreateCategory = () => {
         <form onSubmit={submitHandler}>
           <div className="mb-4">
             <label htmlFor="product_name" className="form-label">
-              Tên danh mục
+              Category's name
             </label>
             <input
               type="text"
@@ -71,7 +71,7 @@ const CreateCategory = () => {
             /> */}
           </div>
           <div className="mb-4">
-            <label className="form-label">Mô tả</label>
+            <label className="form-label">Description</label>
             <textarea
               placeholder="Type here"
               className="form-control"
@@ -83,7 +83,7 @@ const CreateCategory = () => {
 
           <div className="d-grid">
             <BtnPrimary className="py-3" type="submit">
-              Tạo danh mục
+              Add category
             </BtnPrimary>
           </div>
         </form>

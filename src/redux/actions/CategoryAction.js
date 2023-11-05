@@ -70,7 +70,7 @@ export const createCategoryAction =
       );
 
       dispatch({ type: CATEGORY_CREATE_SUCCESS, payload: data });
-      toast.success("Tạo danh mục thành công !", ToastObjects);
+      toast.success("Successfully created category!", ToastObjects);
     } catch (error) {
       const message =
         error.response && error.response.data.message
@@ -80,7 +80,7 @@ export const createCategoryAction =
         type: CATEGORY_CREATE_FAIL,
         payload: message,
       });
-      toast.error("Danh mục không hợp lệ!", ToastObjects);
+      toast.error("Invalid category!", ToastObjects);
     }
   };
 
@@ -105,7 +105,7 @@ export const categoryDeleteAction = (id) => async (dispatch, getState) => {
     );
 
     dispatch({ type: CATEGORY_DELETE_SUCCESS, payload: data });
-    toast.success("Xoá danh mục thành công !", ToastObjects);
+    toast.success("Category deleted successfully!", ToastObjects);
   } catch (error) {
     const message =
       error.response && error.response.data.message

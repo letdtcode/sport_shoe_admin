@@ -84,14 +84,14 @@ const EditProductMain = (props) => {
         <form onSubmit={submitHandler}>
           <div className="content-header">
             <Link to="/products/all" className="btn btn-danger text-white">
-              Trở về trang sản phẩm
+              Return to product page
             </Link>
             <Heading as="h2" size="lg" className="content-title">
-              Cập nhật sản phẩm
+              Update product
             </Heading>
             <div>
               <button type="submit" className="btn btn-primary">
-                Cập nhật ngay
+                Update now
               </button>
             </div>
           </div>
@@ -111,7 +111,7 @@ const EditProductMain = (props) => {
                     <>
                       <div className="mb-4">
                         <label htmlFor="product_title" className="form-label">
-                          Tên sản phẩm
+                          Product's name
                         </label>
                         <input
                           type="text"
@@ -139,7 +139,7 @@ const EditProductMain = (props) => {
                       </div>
                       <div className="mb-4">
                         <label htmlFor="product_price" className="form-label">
-                          Số lượng
+                          Quantity
                         </label>
                         <input
                           type="number"
@@ -156,10 +156,10 @@ const EditProductMain = (props) => {
                           htmlFor="product_category"
                           className="form-label"
                         >
-                          Danh mục
+                          Category
                         </label>
                         <Select
-                          placeholder="Vui lòng chọn danh mục"
+                          placeholder="Select a category"
                           value={category}
                           onChange={(e) => setCategory(e.target.value)}
                         >
@@ -171,7 +171,7 @@ const EditProductMain = (props) => {
                         </Select>
                       </div>
                       <div className="mb-4">
-                        <label className="form-label">Mô tả</label>
+                        <label className="form-label">Description</label>
                         <textarea
                           placeholder="Type here"
                           className="form-control"
@@ -182,7 +182,7 @@ const EditProductMain = (props) => {
                         ></textarea>
                       </div>
                       <div className="mb-4">
-                        <label className="form-label">Hình ảnh</label>
+                        <label className="form-label">Image</label>
                         <input
                           className="form-control"
                           type="text"

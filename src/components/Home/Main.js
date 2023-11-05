@@ -17,7 +17,7 @@ const Main = () => {
         <Box className="content-header">
           <Heading as="h2" size="lg" className="content-title">
             {" "}
-            Bảng điều khiển{" "}
+            Dashboard{" "}
           </Heading>
         </Box>
         {/* Top Total */}
