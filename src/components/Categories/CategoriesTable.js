@@ -42,9 +42,9 @@ const CategoriesTable = () => {
                 </Stack>
               </Th>
               <Th>ID</Th>
-              <Th>Tên danh mục</Th>
-              <Th scope="col">Mô tả</Th>
-              <Th className="text-end">Hành động</Th>
+              <Th>Category's name</Th>
+              <Th scope="col">Description</Th>
+              <Th className="text-end">Action</Th>
             </Tr>
           </Thead>
           {/* Table Data */}
@@ -72,14 +72,14 @@ const CategoriesTable = () => {
                     </Link>
                     <div className="dropdown-menu">
                       <Link className="dropdown-item" to="#">
-                        Sửa thông tin
+                        Edit information
                       </Link>
                       <Link
                         className="dropdown-item text-danger"
                         to="#"
                         onClick={() => deleteHandler(category._id)}
                       >
-                        Xoá
+                        Delete
                       </Link>
                     </div>
                   </div>

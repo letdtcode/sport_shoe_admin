@@ -74,14 +74,14 @@ const Orders = (props) => {
 
               <AlertDialogFooter>
                 <Button ref={cancelRef} onClick={onClose}>
-                  Discard
+                  Cancel
                 </Button>
                 <Button
                   colorScheme="red"
                   onClick={() => deleteHandler(item._id)}
                   ml={3}
                 >
-                  Canceled now
+                  Delete
                 </Button>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -92,15 +92,15 @@ const Orders = (props) => {
       <Table className="table">
         <Thead>
           <Tr>
-            <Th scope="col">STT</Th>
-            <Th scope="col">Tên</Th>
+            <Th scope="col">No</Th>
+            <Th scope="col">Name</Th>
             <Th scope="col">Email</Th>
-            <Th scope="col">Tổng tiền</Th>
-            <Th scope="col">Tình trạng</Th>
-            <Th scope="col">Ngày tạo</Th>
-            <Th>Vận chuyển</Th>
+            <Th scope="col">Total price</Th>
+            <Th scope="col">Status</Th>
+            <Th scope="col">Created At</Th>
+            <Th>Delivery</Th>
             <Th scope="col" className="text-end">
-              Hành động
+              Action
             </Th>
           </Tr>
         </Thead>
@@ -116,11 +116,11 @@ const Orders = (props) => {
               <Td>
                 {order.isPaid ? (
                   <span className="badge rounded-pill alert-success">
-                    Đã thanh toán {moment(order.paidAt).format("MMM Do YY")}
+                    Paid {moment(order.paidAt).format("MMM Do YY")}
                   </span>
                 ) : (
                   <span className="badge rounded-pill alert-danger">
-                    Chưa thanh toán
+                    Unpaid
                   </span>
                 )}
               </Td>
@@ -128,9 +128,9 @@ const Orders = (props) => {
               <Td>{moment(order.createAt).format("MMM Do YY")}</Td>
               <Td>
                 {order.isDelivered ? (
-                  <span className="badge btn-success">Đã giao hàng</span>
+                  <span className="badge btn-success">Delivered</span>
                 ) : (
-                  <span className="badge btn-danger">Chưa giao hàng</span>
+                  <span className="badge btn-danger">Not delivery</span>
                 )}
               </Td>
               <Td className="d-flex justify-content-end align-item-center">
@@ -142,13 +142,13 @@ const Orders = (props) => {
                     {/* MenuItems are not rendered unless Menu is open */}
                     <Link to={`/order/${order._id}`}>
                       <MenuItem>
-                        <i className="fas fa-eye mx-1"></i>Xem đơn hàng
+                        <i className="fas fa-eye mx-1"></i>View orders
                       </MenuItem>
                     </Link>
                     <Box>
                       <MenuItem onClick={onOpen}>
                         <i className="fas fa-trash-alt mx-1"></i>
-                        {""}Xoá
+                        {""}Delete
                       </MenuItem>
                     </Box>
                   </MenuList>

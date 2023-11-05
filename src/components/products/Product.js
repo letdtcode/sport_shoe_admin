@@ -68,15 +68,14 @@ const Product = (props) => {
                   >
                     <AlertDialogOverlay />
                     <AlertDialogContent>
-                      <AlertDialogHeader>Xoá sản phẩm ?</AlertDialogHeader>
+                      <AlertDialogHeader>Delete product?</AlertDialogHeader>
                       <AlertDialogCloseButton />
                       <AlertDialogBody>
-                        Bạn có muốn xoá không ? Bạn sẽ không thể hoàn lại thao
-                        tác được !
+                      You want to delete? You won't be able to undo it!!
                       </AlertDialogBody>
                       <AlertDialogFooter>
                         <Button ref={cancelRef} onClick={onClose}>
-                          Không
+                          Cancel
                         </Button>
                         <Button
                           colorScheme="red"
@@ -86,7 +85,7 @@ const Product = (props) => {
                             onClose();
                           }}
                         >
-                          Có
+                          Delete
                         </Button>
                       </AlertDialogFooter>
                     </AlertDialogContent>

@@ -24,11 +24,11 @@ const MainProducts = (props) => {
       <Stack className="content-main">
         <Box className="content-header">
           <Heading as="h2" size="lg" className="content-title">
-            Tất cả sản phẩm
+          All products
           </Heading>
           <Box>
             <Link to="/addproduct" className="btn btn-primary">
-              Tạo mới
+              Add product
             </Link>
           </Box>
         </Box>
@@ -39,26 +39,26 @@ const MainProducts = (props) => {
               <div className="col-lg-4 col-md-6 me-auto ">
                 <input
                   type="search"
-                  placeholder="Tìm kiếm..."
+                  placeholder="Search..."
                   className="form-control p-2"
                 />
               </div>
               <Flex className="col-lg-2" align="center">
-                Tổng sản phẩm: {products.length}
+              Total products: {products.length}
               </Flex>
               <div className="col-lg-2 col-6 col-md-3">
-                <Select placeholder="Chọn danh mục">
-                  <option>Tất cả danh mục</option>
+                <Select placeholder="Select category">
+                  <option>All categories</option>
                   <option>Nam</option>
                   <option>Nữ</option>
-                  <option>Khác</option>
+                  <option>Orthers...</option>
                 </Select>
               </div>
               <div className="col-lg-2 col-6 col-md-3">
                 <Select>
-                  <option>Thêm gần nhất</option>
-                  <option>Giá thấp nhất</option>
-                  <option>Xem nhiều nhất</option>
+                  <option>Latest added</option>
+                  <option>Lowest price</option>
+                  <option>Most view</option>
                 </Select>
               </div>
             </div>

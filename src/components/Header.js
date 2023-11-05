@@ -39,7 +39,7 @@ const Header = () => {
               list="search_terms"
               type="text"
               className="form-control"
-              placeholder="Tìm kiếm sản phẩm"
+              placeholder="Search products"
             />
             <button className="btn btn-light bg" type="button">
               <i className="far fa-search"></i>

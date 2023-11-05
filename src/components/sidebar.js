@@ -32,7 +32,7 @@ const Sidebar = () => {
                 exact={true}
               >
                 <i className="icon fas fa-home"></i>
-                <span className="text">Bảng điều khiển</span>
+                <span className="text">Dashboard</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -42,7 +42,7 @@ const Sidebar = () => {
                 to="/products/all"
               >
                 <i className="icon fas fa-shopping-bag"></i>
-                <span className="text">Kho sản phẩm</span>
+                <span className="text">Product warehouse</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -52,7 +52,7 @@ const Sidebar = () => {
                 to="/addproduct"
               >
                 <i className="icon fas fa-cart-plus"></i>
-                <span className="text">Thêm sản phẩm</span>
+                <span className="text">Add product</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -62,7 +62,7 @@ const Sidebar = () => {
                 to="/category"
               >
                 <i className="icon fas fa-list"></i>
-                <span className="text">Danh mục</span>
+                <span className="text">Category</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -72,7 +72,7 @@ const Sidebar = () => {
                 to="/orders"
               >
                 <i className="icon fas fa-bags-shopping"></i>
-                <span className="text">Đơn hàng</span>
+                <span className="text">Orders</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -82,7 +82,7 @@ const Sidebar = () => {
                 to="/users"
               >
                 <i className="icon fas fa-user"></i>
-                <span className="text">Người dùng</span>
+                <span className="text">Users</span>
               </NavLink>
             </li>
             <li className="menu-item">
@@ -92,7 +92,7 @@ const Sidebar = () => {
                 to="/sellers"
               >
                 <i className="icon fas fa-store-alt"></i>
-                <span className="text">Người bán</span>
+                <span className="text">Sellers</span>
               </NavLink>
             </li>
 
@@ -103,7 +103,7 @@ const Sidebar = () => {
                 to="/transaction"
               >
                 <i className="icon fas fa-usd-circle"></i>
-                <span className="text">Giao dịch</span>
+                <span className="text">Transaction</span>
               </NavLink>
             </li>
           </ul>
