@@ -23,7 +23,6 @@ const CategoriesTable = () => {
   const { categories } = categoryList;
   useEffect(() => {
     dispatch(categoryListAllAction());
-    console.log("Deleted Category Successfully");
   }, [dispatch]);
 
   const deleteHandler = (id) => {

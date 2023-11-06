@@ -46,6 +46,8 @@ export const productListAllAction =
         `${URL}/api/v1/products/all?keyword=${keyword}&pageNumber=${pageNumber}`,
         config
       );
+
+      console.log(data)
       dispatch({
         type: PRODUCT_LIST_SUCCESS,
         payload: data,

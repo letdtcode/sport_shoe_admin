@@ -10,10 +10,23 @@ import {
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 import * as moment from "moment";
+import {
+  AlertDialog,
+  AlertDialogCloseButton,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogBody,
+  Button,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  useDisclosure,
+} from "@chakra-ui/react";
 
 const OrderDetailmain = (props) => {
   const { orderId } = props;
   const dispatch = useDispatch();
+  const cancelRef = React.useRef();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const orderDetails = useSelector((state) => state.orderDetails);
   const { loading, error, order } = orderDetails;
   const orderDelivered = useSelector((state) => state.orderDelivered);
@@ -93,11 +106,43 @@ const OrderDetailmain = (props) => {
                     <>
                       {loadingDeliver && <Loading />}
                       <button
-                        onClick={deliveredHandler}
+                        onClick={onOpen}
+                        // onClick={deliveredHandler}
                         className="btn btn-dark col-12"
                       >
                         MARK AT DELIVERED
                       </button>
+                      <AlertDialog
+                        motionPreset="slideInBottom"
+                        leastDestructiveRef={cancelRef}
+                        onClose={onClose}
+                        isOpen={isOpen}
+                        isCentered
+                      >
+                        <AlertDialogOverlay />
+                        <AlertDialogContent>
+                          <AlertDialogHeader>Delete product?</AlertDialogHeader>
+                          <AlertDialogCloseButton />
+                          <AlertDialogBody>
+                          You want delivery. You won't be able to undo it!!
+                          </AlertDialogBody>
+                          <AlertDialogFooter>
+                            <Button ref={cancelRef} onClick={onClose}>
+                              Cancel
+                            </Button>
+                            <Button
+                              colorScheme="red"
+                              ml={3}
+                              onClick={() => {
+                                deliveredHandler();
+                                onClose();
+                              }}
+                            >
+                              Delivery
+                            </Button>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </>
                   )}
                 </div>
