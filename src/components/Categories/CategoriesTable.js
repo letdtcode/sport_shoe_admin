@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   categoryDeleteAction,
+  categoryGetItemEditAction,
   categoryListAllAction,
 } from "../../redux/actions/CategoryAction";
 import "react-toastify/dist/ReactToastify.css";
@@ -23,10 +24,15 @@ const CategoriesTable = () => {
   const { categories } = categoryList;
   useEffect(() => {
     dispatch(categoryListAllAction());
+    console.log("Deleted Category Successfully");
   }, [dispatch]);
 
   const deleteHandler = (id) => {
     dispatch(categoryDeleteAction(id));
+  };
+
+  const updateHandler = (category) => {
+    dispatch(categoryGetItemEditAction(category));
   };
 
   return (
@@ -70,7 +76,11 @@ const CategoriesTable = () => {
                       <i className="fas fa-ellipsis-h"></i>
                     </Link>
                     <div className="dropdown-menu">
-                      <Link className="dropdown-item" to="#">
+                      <Link
+                        className="dropdown-item"
+                        to="#"
+                        onClick={() => updateHandler(category)}
+                      >
                         Edit information
                       </Link>
                       <Link

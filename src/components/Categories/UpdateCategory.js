@@ -15,20 +15,18 @@ const BtnPrimary = styled.button`
   }
 `;
 
-const CreateCategory = () => {
+const UpdateCategory = () => {
   const dispatch = useDispatch();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const categoryCreate = useSelector((state) => state.categoryCreate);
+  //   const [name, setName] = useState("");
+  //   const [description, setDescription] = useState("");
   const categoryUpdate = useSelector((state) => state.categoryUpdate);
 
-  const { error, category } = categoryCreate;
+  const { name, description } = categoryUpdate;
 
   const inputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
   const handleImgChange = (e) => {
     setImageFile(e.target.files[0]);
-    // inputRef.current.value = '';
   };
 
   useEffect(() => {
@@ -38,6 +36,7 @@ const CreateCategory = () => {
       dispatch({ type: CATEGORY_CREATE_RESET });
     }
   }, [dispatch, category]);
+
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(createCategoryAction(name, description, imageFile));

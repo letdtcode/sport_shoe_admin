@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import CreateCategory from "./CreateCategory";
 import CategoriesTable from "./CategoriesTable";
 import { Box, Heading, Stack } from "@chakra-ui/react";
 
 const MainCategories = () => {
+  const [isUpdate, setIsUpdate] = useState(false);
   return (
     <Stack className="content-main">
       <Box className="content-header">
@@ -15,6 +16,9 @@ const MainCategories = () => {
       <div className="card shadow-sm">
         <div className="card-body">
           <div className="row">
+            {
+              isUpdate?<
+            }
             {/* Create category */}
             <CreateCategory />
             {/* Categories table */}

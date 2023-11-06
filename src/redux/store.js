@@ -19,6 +19,7 @@ import {
   categoryCreateReducer,
   categoryDeleteReducer,
   categoryListAllReducer,
+  categoryUpdateReducer,
 } from "./reducers/CategoryReducer";
 
 const reducer = combineReducers({
@@ -33,6 +34,7 @@ const reducer = combineReducers({
   productUpdate: productUpdateReducer,
   // CATEGORY
   categoryList: categoryListAllReducer,
+  categoryUpdate: categoryUpdateReducer,
   categoryCreate: categoryCreateReducer,
   categoryDelete: categoryDeleteReducer,
   // ORDER

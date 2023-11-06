@@ -6,6 +6,7 @@ import {
   CATEGORY_DELETE_FAIL,
   CATEGORY_DELETE_REQUEST,
   CATEGORY_DELETE_SUCCESS,
+  CATEGORY_GET_ITEM,
   CATEGORY_LIST_FAIL,
   CATEGORY_LIST_REQUEST,
   CATEGORY_LIST_SUCCESS,
@@ -53,6 +54,18 @@ export const categoryCreateReducer = (state = {}, action) => {
       };
     case CATEGORY_CREATE_RESET:
       return {};
+    default:
+      return state;
+  }
+};
+
+export const categoryUpdateReducer = (state = {}, action) => {
+  switch (action.type) {
+    case CATEGORY_GET_ITEM:
+      return {
+        success: true,
+        category: action.payload,
+      };
     default:
       return state;
   }

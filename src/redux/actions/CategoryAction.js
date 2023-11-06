@@ -8,6 +8,7 @@ import {
   CATEGORY_DELETE_FAIL,
   CATEGORY_DELETE_REQUEST,
   CATEGORY_DELETE_SUCCESS,
+  CATEGORY_GET_ITEM,
   CATEGORY_LIST_FAIL,
   CATEGORY_LIST_REQUEST,
   CATEGORY_LIST_SUCCESS,
@@ -48,7 +49,6 @@ export const categoryListAllAction = () => async (dispatch, getState) => {
   }
 };
 
-
 export const createCategoryAction =
   (name, description, imageFile) => async (dispatch, getState) => {
     try {
@@ -63,11 +63,12 @@ export const createCategoryAction =
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
-      
+
       let formData = new FormData();
       formData.append("file", imageFile);
       const dataImage = await axios.post(
-        `${URL}/api/v1/upload/single`, formData,
+        `${URL}/api/v1/upload/single`,
+        formData,
         config
       );
       const imageUrl = dataImage.data.image;
@@ -75,7 +76,7 @@ export const createCategoryAction =
       // use axios.[GET] to compare user with server's user,
       const { data } = await axios.post(
         `${URL}/api/v1/categories`,
-        { name, description,  imageUrl},
+        { name, description, imageUrl },
         config
       );
 
@@ -94,6 +95,13 @@ export const createCategoryAction =
     }
   };
 
+export const categoryGetItemEditAction = (item) => {
+  return {
+    type: CATEGORY_GET_ITEM,
+    payload: item,
+  };
+};
+
 // [GET] GET ALL CATEGORIES LIST ACTION
 export const categoryDeleteAction = (id) => async (dispatch, getState) => {
   try {
@@ -109,10 +117,7 @@ export const categoryDeleteAction = (id) => async (dispatch, getState) => {
       },
     };
     // use axios.[GET] to compare user with server's user,
-    const { data } = await axios.delete(
-      `${URL}/api/v1/category/${id}`,
-      config
-    );
+    const { data } = await axios.delete(`${URL}/api/v1/category/${id}`, config);
 
     dispatch({ type: CATEGORY_DELETE_SUCCESS, payload: data });
     toast.success("Category deleted successfully!", ToastObjects);
