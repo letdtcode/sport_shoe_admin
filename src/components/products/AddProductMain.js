@@ -83,7 +83,7 @@ const AddProductMain = () => {
                   {error && <Message variant="alert-danger">{error}</Message>}
                   {loading && <Loading />}
                   <div className="mb-4">
-                    <label htmlFor="product_title" className="form-label">             
+                    <label htmlFor="product_title" className="form-label">
                       Product's name
                     </label>
                     <input

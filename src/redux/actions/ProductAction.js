@@ -30,6 +30,7 @@ const ToastObjects = {
 export const productListAllAction =
   (keyword = " ", pageNumber = " ") =>
   async (dispatch, getState) => {
+    console.log("dcm");
     try {
       const {
         userLogin: { userInfo },
