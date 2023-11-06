@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Toast from "../LoadingError/Toast";
 import { createCategoryAction } from "../../redux/actions/CategoryAction";
@@ -19,21 +19,27 @@ const CreateCategory = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState("");
   const categoryCreate = useSelector((state) => state.categoryCreate);
   const { error, category } = categoryCreate;
+
+  const inputRef = useRef(null);
+  const [imageFile, setImageFile] = useState(null);
+  const handleImgChange = (e) => {
+    setImageFile(e.target.files[0])
+    // inputRef.current.value = '';
+};
 
   useEffect(() => {
     if (category) {
       setName("");
       setDescription("");
-      setImage("");
       dispatch({ type: CATEGORY_CREATE_RESET });
     }
   }, [dispatch, category]);
   const submitHandler = (e) => {
+
     e.preventDefault();
-    dispatch(createCategoryAction(name, description, image));
+    dispatch(createCategoryAction(name, description, imageFile));
   };
   return (
     <>
@@ -55,22 +61,6 @@ const CreateCategory = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="form-label">Hình ảnh</label>
-            <input
-              className="form-control"
-              type="text"
-              placeholder="Inter Image URL"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-            />
-            {/* <input
-              className="form-control mt-3"
-              type="file"
-              value={image}
-              onChange={(e) => setImage(URL.createObjectURL(e.target.files[0]))}
-            /> */}
-          </div>
-          <div className="mb-4">
             <label className="form-label">Description</label>
             <textarea
               placeholder="Type here"
@@ -80,6 +70,31 @@ const CreateCategory = () => {
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </div>
+          <div className="mb-4">
+            <label className="form-label">Image</label>
+            {/* <input
+              className="form-control"
+              type="text"
+              placeholder="Inter Image URL"
+              value={image}
+              onChange={(e) => setImage(e.target.value)}
+            /> */}
+            {/* <input
+              className="form-control mt-3"
+              type="file"
+              value={image}
+              onChange={(e) => setImage(URL.createObjectURL(e.target.files[0]))}
+            /> */}
+          <input
+                
+                type="file"
+                accept="image/*"
+                ref={inputRef}
+                onChange={handleImgChange}
+            />
+  
+          </div>
+          
 
           <div className="d-grid">
             <BtnPrimary className="py-3" type="submit">
