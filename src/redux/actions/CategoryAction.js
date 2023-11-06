@@ -48,8 +48,9 @@ export const categoryListAllAction = () => async (dispatch, getState) => {
   }
 };
 
+
 export const createCategoryAction =
-  (name, image, description) => async (dispatch, getState) => {
+  (name, description, imageFile) => async (dispatch, getState) => {
     try {
       dispatch({ type: CATEGORY_CREATE_REQUEST });
 
@@ -62,10 +63,19 @@ export const createCategoryAction =
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
+      
+      let formData = new FormData();
+      formData.append("file", imageFile);
+      const dataImage = await axios.post(
+        `${URL}/api/v1/upload/single`, formData,
+        config
+      );
+      const imageUrl = dataImage.data.image;
+
       // use axios.[GET] to compare user with server's user,
       const { data } = await axios.post(
         `${URL}/api/v1/categories`,
-        { name, image, description },
+        { name, description,  imageUrl},
         config
       );
 
@@ -100,7 +110,7 @@ export const categoryDeleteAction = (id) => async (dispatch, getState) => {
     };
     // use axios.[GET] to compare user with server's user,
     const { data } = await axios.delete(
-      `${URL}/api/v1/categories/${id}`,
+      `${URL}/api/v1/category/${id}`,
       config
     );
 

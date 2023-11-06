@@ -1,7 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Product from "./Product";
 import Loading from "../LoadingError/Loading";
+import { categoryListAllAction } from "../../redux/actions/CategoryAction";
 import Message from "../LoadingError/Error";
 import { Box, Container, Flex, Heading, Select, Stack } from "@chakra-ui/react";
 import Pagination from "../Home/Pagination";
@@ -11,12 +12,17 @@ import Toast from "../LoadingError/Toast";
 const MainProducts = (props) => {
   const { keyword, pageNumber } = props;
   const productList = useSelector((state) => state.productList);
+  const [category, setCategory] = useState();
   const { loading, error, products, page, pages } = productList;
   const productDelete = useSelector((state) => state.productDelete);
   const { loading: successLoading } = productDelete;
   const dispatch = useDispatch();
+
+  const categoryList = useSelector((state) => state.categoryList);
+  const { categories } = categoryList;
   useEffect(() => {
-    dispatch(productListAllAction(keyword, pageNumber));
+    dispatch(productListAllAction(keyword, pageNumber), categoryListAllAction());
+    setCategory();
   }, [dispatch, keyword, pageNumber]);
   return (
     <>
@@ -47,11 +53,15 @@ const MainProducts = (props) => {
               Total products: {products.length}
               </Flex>
               <div className="col-lg-2 col-6 col-md-3">
-                <Select placeholder="Select category">
-                  <option>All categories</option>
-                  <option>Nam</option>
-                  <option>Nữ</option>
-                  <option>Orthers...</option>
+                <Select 
+                placeholder="Select category" 
+                value={category}
+                onChange={(e) => console.log(setCategory(e.target.value))}>
+                  {categories?.map((item) => (
+                        <option key={item._id} value={item._id}>
+                          {item.name}
+                        </option>
+                      ))}
                 </Select>
               </div>
               <div className="col-lg-2 col-6 col-md-3">
