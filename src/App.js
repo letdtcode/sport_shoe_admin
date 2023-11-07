@@ -44,7 +44,7 @@ function App() {
               path="/products/all/page/:pageNumber"
               component={ProductScreen}
             />
-            <PrivateRouter path="/products/all" component={ProductScreen} />
+            <PrivateRouter path="/products/all" component={ProductScreen} exact />
             <PrivateRouter
               path="/search/:keyword/page/:pageNumber"
               component={ProductScreen}

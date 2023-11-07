@@ -28,7 +28,7 @@ const ToastObjects = {
 };
 // [GET] GET ALL PRODUCT LIST ACTION
 export const productListAllAction =
-  (keyword = " ", pageNumber = " ") =>
+  (keywords="", pageNumber="") =>
   async (dispatch, getState) => {
     try {
       const {
@@ -40,14 +40,13 @@ export const productListAllAction =
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
+      console.log(keywords)
+      console.log(pageNumber)
       dispatch({ type: PRODUCT_LIST_REQUEST });
-
       const { data } = await axios.get(
-        `${URL}/api/v1/products/all?keyword=${keyword}&pageNumber=${pageNumber}`,
+        `${URL}/api/v1/products/all?keyword=${keywords}&pageNumber=${pageNumber}`,
         config
       );
-
-      console.log(data)
       dispatch({
         type: PRODUCT_LIST_SUCCESS,
         payload: data,

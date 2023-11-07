@@ -11,7 +11,7 @@ const ProductScreen = ({ match }) => {
       <Sidebar />
       <main className="main-wrap">
         <Header />
-        <MainProducts keyword={keyword} pageNumber={pageNumber} />
+        <MainProducts keyword={keyword} pageNumber={pageNumber}  />
       </main>
     </>
   );
