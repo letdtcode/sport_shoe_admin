@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Toast from "../LoadingError/Toast";
@@ -6,9 +6,24 @@ import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 import { productCreateAction } from "../../redux/actions/ProductAction";
 import { PRODUCT_CREATE_RESET } from "../../redux/constants/ProductConstants";
-import { Heading, Select, Stack } from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  Select,
+  Stack,
+  border,
+  TableCaption,
+  Table,
+  Input,
+  Th,
+  Td,
+  Thead,
+  Tr,
+  Tbody,
+} from "@chakra-ui/react";
 import { categoryListAllAction } from "../../redux/actions/CategoryAction";
 import styled from "@emotion/styled";
+import { event } from "jquery";
 
 const BtnPrimary = styled.button`
   padding: 8px 45px;
@@ -21,10 +36,15 @@ const AddProductMain = () => {
   // Set up state
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
-  const [countInStock, setCountInStock] = useState(0);
   const [category, setCategory] = useState();
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState("");
+  // const [image, setImage] = useState("");
+  const inputRef = useRef(null);
+  const [imageFile, setImageFile] = useState(null);
+  const handleImgChange = (e) => {
+    setImageFile(e.target.files[0])
+    // inputRef.current.value = '';
+};
 
   // Declare Dispatch
   const dispatch = useDispatch();
@@ -34,15 +54,58 @@ const AddProductMain = () => {
   const { categories } = categoryList;
   const { loading, product, error } = productCreate;
 
+  const [itemTypes, setItemTypes] = useState([""]);
+
+  const handleItemType = (index, value) => {
+    const newItemType = [...itemTypes];
+    newItemType[index] = value;
+    newItemType[index + 1] = newItemType[index + 1]
+      ? newItemType[index + 1]
+      : "";
+    if (value === "" && index < newItemType.length - 1) {
+      newItemType.splice(index, 1);
+    }
+    setItemTypes(newItemType);
+  };
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  const availableSizes = [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
+
+  const handleSizeChange = (size) => {
+    if (selectedSizes.includes(size)) {
+      // Nếu size đã được chọn, loại bỏ nó khỏi danh sách selectedSizes
+      setSelectedSizes(selectedSizes.filter((item) => item !== size));
+    } else {
+      // Nếu size chưa được chọn, thêm nó vào danh sách selectedSizes
+      setSelectedSizes([...selectedSizes, size]);
+    }
+  };
+  const isSizeSelected = (size) => selectedSizes.includes(size);
+
+  const [quantityData, setQuantityData] = useState([[]]);
+  const addQuantity = (itemTypes, selectedSizes) => {
+    const updatedQuantityData = [];
+    for (let i = 0; i < itemTypes.length - 1; i++) {
+      const row = [];
+      for (let j = 0; j < selectedSizes.length; j++) {
+        row.push(0);
+      }
+      updatedQuantityData.push(row);
+    }
+    setQuantityData(updatedQuantityData);
+  };
+  useEffect(() => {
+    addQuantity(itemTypes, selectedSizes);
+    console.log(quantityData);
+  }, [itemTypes, selectedSizes]);
+
   useEffect(() => {
     dispatch(categoryListAllAction());
     if (product) {
       dispatch({ type: PRODUCT_CREATE_RESET });
       setName("");
       setPrice(0);
-      setCountInStock(0);
       setDescription("");
-      setImage("");
+      setImageFile("");
       setCategory();
     }
   }, [product, dispatch]);
@@ -55,8 +118,7 @@ const AddProductMain = () => {
         name,
         price,
         description,
-        image,
-        countInStock,
+        imageFile,
         category
       )
     );
@@ -110,7 +172,7 @@ const AddProductMain = () => {
                       required
                     />
                   </div>
-                  <div className="mb-4">
+                  {/* <div className="mb-4">
                     <label htmlFor="product_quantity" className="form-label">
                       Quantity
                     </label>
@@ -123,7 +185,7 @@ const AddProductMain = () => {
                       onChange={(e) => setCountInStock(e.target.value)}
                       required
                     />
-                  </div>
+                  </div> */}
                   <div className="mb-4">
                     <label htmlFor="product_category" className="form-label">
                       Category
@@ -154,25 +216,102 @@ const AddProductMain = () => {
                   <div className="mb-4">
                     <label className="form-label">Image</label>
                     <input
-                      className="form-control"
-                      type="text"
-                      placeholder="Inter Image URL"
-                      value={image}
-                      onChange={(e) => setImage(e.target.value)}
-                    />
-                    <input
-                      className="form-control mt-3"
                       type="file"
-                      onChange={(e) =>
-                        setImage(URL.createObjectURL(e.target.files[0]))
-                      }
+                      accept="image/*"
+                      ref={inputRef}
+                      onChange={handleImgChange}
                     />
+                    </div>
+                    
+                    <div>
+                    
+                  </div>
+                  <div className="mb-4">
+                    <div style={{ display: "grid" }}>
+                      <label>Phân loại màu</label>
+                      <div>
+                        {itemTypes.map((itemTpye, index) => (
+                          <input
+                            width={"100px"}
+                            key={index}
+                            type="text"
+                            value={itemTpye}
+                            placeholder="Type here"
+                            className="input-item-type"
+                            id="type"
+                            onChange={(e) =>
+                              handleItemType(index, e.target.value)
+                            }
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <div style={{ display: "grid" }}>
+                      <label>Phân loại size</label>
+                      <div>
+                        {availableSizes.map((size) => (
+                          <button
+                            key={size}
+                            className={
+                              isSizeSelected(size)
+                                ? "button-size-selected"
+                                : "button-size"
+                            }
+                            required={false}
+                            onClick={() => handleSizeChange(size)}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <Table variant="simple">
+                      <Thead>
+                        <Tr>
+                          <Th>Type</Th>
+                          <Th>Size</Th>
+                          <Th>Quantity</Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {quantityData.map((type, i) => (
+                          <>
+                            {type.map((size, j) => (
+                              <>
+                                <Tr>
+                                  <Td>{itemTypes[i]}</Td>
+                                  <Td>{selectedSizes[j]}</Td>
+                                  <Td>
+                                    <Input
+                                      type="number"
+                                      id={`quantity${i}${j}`}
+                                      value={quantityData[i][j]}
+                                      onChange={(e) => {
+                                        const updatedQuantityData = [
+                                          ...quantityData,
+                                        ];
+                                        updatedQuantityData[i][j] = parseInt(
+                                          e.target.value,
+                                          10
+                                        );
+                                        setQuantityData(updatedQuantityData);
+                                      }}
+                                    />
+                                  </Td>
+                                </Tr>
+                              </>
+                            ))}
+                          </>
+                        ))}
+                      </Tbody>
+                    </Table>
                   </div>
                 </div>
               </div>
-              <div className="d-flex justify-content-end">
-                <BtnPrimary type="submit">Publish now</BtnPrimary>
-              </div>
+            </div>
+            <div className="d-flex justify-content-end">
+              <BtnPrimary type="submit">Publish now</BtnPrimary>
             </div>
           </div>
         </form>

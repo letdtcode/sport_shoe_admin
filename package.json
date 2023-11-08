@@ -13,6 +13,7 @@
     "@testing-library/user-event": "^12.8.3",
     "axios": "^0.24.0",
     "framer-motion": "^4.1.17",
+    "i": "^0.3.7",
     "jquery": "^3.6.0",
     "moment": "^2.29.1",
     "react": "^17.0.2",
