@@ -30,7 +30,7 @@ export const categoryListAllAction = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.accessToken}`,
       },
     };
     // use axios.[GET] to compare user with server's user,
@@ -60,7 +60,7 @@ export const createCategoryAction =
 
       const config = {
         headers: {
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.accessToken}`,
         },
       };
 
@@ -113,7 +113,7 @@ export const categoryDeleteAction = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.accessToken}`,
       },
     };
     // use axios.[GET] to compare user with server's user,

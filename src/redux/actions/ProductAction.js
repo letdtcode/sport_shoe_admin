@@ -28,7 +28,7 @@ const ToastObjects = {
 };
 // [GET] GET ALL PRODUCT LIST ACTION
 export const productListAllAction =
-  (keywords="", pageNumber="") =>
+  (keywords = "", pageNumber = "") =>
   async (dispatch, getState) => {
     console.log("dcm");
     try {
@@ -38,11 +38,11 @@ export const productListAllAction =
 
       const config = {
         headers: {
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.accessToken}`,
         },
       };
-      console.log(keywords)
-      console.log(pageNumber)
+      console.log(keywords);
+      console.log(pageNumber);
       dispatch({ type: PRODUCT_LIST_REQUEST });
       const { data } = await axios.get(
         `${URL}/api/v1/products/all?keyword=${keywords}&pageNumber=${pageNumber}`,
@@ -74,7 +74,7 @@ export const productDeleteAction = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.accessToken}`,
       },
     };
     // use axios.[GET] to compare user with server's user,
@@ -109,14 +109,15 @@ export const productCreateAction =
 
       const config = {
         headers: {
-          Authorization: `Bearer ${userInfo.token}`,
+          Authorization: `Bearer ${userInfo.accessToken}`,
         },
       };
 
       let formData = new FormData();
       formData.append("file", imageFile);
       const dataImage = await axios.post(
-        `${URL}/api/v1/upload/single`, formData,
+        `${URL}/api/v1/upload/single`,
+        formData,
         config
       );
       const imageUrl = dataImage.data.image;
@@ -183,18 +184,18 @@ export const productUpdateAction = (product) => async (dispatch, getState) => {
     const config = {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.accessToken}`,
       },
     };
 
     let formData = new FormData();
     formData.append("file", product.imageFile);
     const dataImage = await axios.post(
-      `${URL}/api/v1/upload/single`, formData,
+      `${URL}/api/v1/upload/single`,
+      formData,
       config
     );
     product.image = dataImage.data.image;
-
 
     // use axios.[POST] to create user
     const { data } = await axios.put(

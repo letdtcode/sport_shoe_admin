@@ -38,6 +38,7 @@ export const login = (email, password) => async (dispatch) => {
       { email, password },
       config
     );
+    console.log(data);
 
     if (!data.isAdmin === true) {
       toast.error("You are not allowed to be access here", ToastObjects);
@@ -87,7 +88,7 @@ export const userListAction = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.accessToken}`,
       },
     };
 

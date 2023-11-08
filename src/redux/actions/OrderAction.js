@@ -27,7 +27,7 @@ export const orderListAllAction = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.accessToken}`,
       },
     };
     // use axios.[GET] to compare user with server's user,
@@ -60,7 +60,7 @@ export const orderDetailsAction = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.accessToken}`,
       },
     };
     // use axios.[GET] to compare user with server's user,
@@ -93,7 +93,7 @@ export const orderDeliveredAction = (order) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.accessToken}`,
       },
     };
     // use axios.[GET] to compare user with server's user,
@@ -130,7 +130,7 @@ export const orderDeleteAction = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${userInfo.accessToken}`,
       },
     };
     // use axios.[GET] to compare user with server's user,
