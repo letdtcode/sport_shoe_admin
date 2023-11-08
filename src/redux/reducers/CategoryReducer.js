@@ -63,8 +63,7 @@ export const categoryUpdateReducer = (state = {}, action) => {
   switch (action.type) {
     case CATEGORY_GET_ITEM:
       return {
-        success: true,
-        category: action.payload,
+        categoryItemUpdate: action.payload,
       };
     default:
       return state;

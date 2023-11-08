@@ -71,7 +71,7 @@ const Product = (props) => {
                       <AlertDialogHeader>Delete product?</AlertDialogHeader>
                       <AlertDialogCloseButton />
                       <AlertDialogBody>
-                      You want to delete? You won't be able to undo it!!
+                        You want to delete? You won't be able to undo it!!
                       </AlertDialogBody>
                       <AlertDialogFooter>
                         <Button ref={cancelRef} onClick={onClose}>

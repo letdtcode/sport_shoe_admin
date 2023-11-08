@@ -42,9 +42,9 @@ const AddProductMain = () => {
   const inputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
   const handleImgChange = (e) => {
-    setImageFile(e.target.files[0])
+    setImageFile(e.target.files[0]);
     // inputRef.current.value = '';
-};
+  };
 
   // Declare Dispatch
   const dispatch = useDispatch();
@@ -114,13 +114,7 @@ const AddProductMain = () => {
     e.preventDefault();
 
     dispatch(
-      productCreateAction(
-        name,
-        price,
-        description,
-        imageFile,
-        category
-      )
+      productCreateAction(name, price, description, imageFile, category)
     );
   };
 
@@ -221,11 +215,9 @@ const AddProductMain = () => {
                       ref={inputRef}
                       onChange={handleImgChange}
                     />
-                    </div>
-                    
-                    <div>
-                    
                   </div>
+
+                  <div></div>
                   <div className="mb-4">
                     <div style={{ display: "grid" }}>
                       <label>Phân loại màu</label>

@@ -4,11 +4,17 @@ import CategoriesTable from "./CategoriesTable";
 import { Box, Heading, Stack } from "@chakra-ui/react";
 
 const MainCategories = () => {
+  // const [isUpdate, setIsUpdate] = useState(false);
+
+  // const handleChangeStatus = (isUpdate) => {
+  //   console.log(isUpdate);
+  //   // setIsUpdate(isUpdate);
+  // };
   return (
     <Stack className="content-main">
       <Box className="content-header">
         <Heading as="h2" size="md" className="content-title">
-          Category
+          Brand
         </Heading>
       </Box>
 
@@ -16,7 +22,9 @@ const MainCategories = () => {
         <div className="card-body">
           <div className="row">
             {/* Create category */}
+
             <CreateCategory />
+
             {/* Categories table */}
             <CategoriesTable />
           </div>

@@ -24,6 +24,8 @@ const CreateCategory = () => {
 
   const { error, category } = categoryCreate;
 
+  const { categoryItemUpdate } = categoryUpdate;
+
   const inputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
   const handleImgChange = (e) => {
@@ -37,11 +39,17 @@ const CreateCategory = () => {
       setDescription("");
       dispatch({ type: CATEGORY_CREATE_RESET });
     }
-  }, [dispatch, category]);
+    if (categoryItemUpdate) {
+      setName(categoryItemUpdate.name);
+      setDescription(categoryItemUpdate.description);
+    }
+  }, [dispatch, category, categoryItemUpdate]);
+
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(createCategoryAction(name, description, imageFile));
   };
+
   return (
     <>
       <Toast />

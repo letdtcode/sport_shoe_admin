@@ -19,7 +19,7 @@ const TopTotal = (props) => {
             </span>
             <div className="text">
               <Heading as="h6" size="sm" className="mb-1">
-              Total revenue
+                Total revenue
               </Heading>
               <span>${totalSale.toFixed()}</span>
             </div>
@@ -51,7 +51,7 @@ const TopTotal = (props) => {
             </span>
             <div className="text">
               <Heading as="h6" size="sm" className="mb-1">
-              Total products
+                Total products
               </Heading>
               <span>
                 {products ? <span>{products.length}</span> : <span>0</span>}

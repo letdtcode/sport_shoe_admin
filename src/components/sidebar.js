@@ -69,6 +69,16 @@ const Sidebar = () => {
               <NavLink
                 activeClassName="active"
                 className="menu-link"
+                to="/brand"
+              >
+                <i className="icon fas fa-medal"></i>
+                <span className="text">Brand</span>
+              </NavLink>
+            </li>
+            <li className="menu-item">
+              <NavLink
+                activeClassName="active"
+                className="menu-link"
                 to="/orders"
               >
                 <i className="icon fas fa-bags-shopping"></i>

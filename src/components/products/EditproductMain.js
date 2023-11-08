@@ -48,10 +48,10 @@ const EditProductMain = (props) => {
   const inputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
   const handleImgChange = (e) => {
-    setImageFile(e.target.files[0])
+    setImageFile(e.target.files[0]);
     // inputRef.current.value = '';
-};
-const [itemTypes, setItemTypes] = useState([""]);
+  };
+  const [itemTypes, setItemTypes] = useState([""]);
 
   const handleItemType = (index, value) => {
     const newItemType = [...itemTypes];
