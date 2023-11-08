@@ -3,6 +3,7 @@ import Toast from "../LoadingError/Toast";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { Checkbox, CheckboxGroup, Stack } from "@chakra-ui/react";
 import {
   productEditAction,
   productUpdateAction,
@@ -12,6 +13,7 @@ import Message from "../LoadingError/Error";
 import { PRODUCT_UPDATE_RESET } from "../../redux/constants/ProductConstants";
 import { Heading, Select } from "@chakra-ui/react";
 import { categoryListAllAction } from "../../redux/actions/CategoryAction";
+
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -180,6 +182,20 @@ const EditProductMain = (props) => {
                           value={description}
                           onChange={(e) => setDescription(e.target.value)}
                         ></textarea>
+                      </div>
+
+                      <div className="mb-4">
+                        <label className="form-label">Image</label>
+                        <CheckboxGroup
+                          colorScheme="green"
+                          defaultValue={["naruto", "kakashi"]}
+                        >
+                          <Stack spacing={[1, 5]} direction={["column", "row"]}>
+                            <Checkbox value="naruto">Naruto</Checkbox>
+                            <Checkbox value="sasuke">Sasuke</Checkbox>
+                            <Checkbox value="kakashi">Kakashi</Checkbox>
+                          </Stack>
+                        </CheckboxGroup>
                       </div>
                       <div className="mb-4">
                         <label className="form-label">Image</label>

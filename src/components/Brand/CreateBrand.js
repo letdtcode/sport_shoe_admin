@@ -15,18 +15,22 @@ const BtnPrimary = styled.button`
   }
 `;
 
-const UpdateCategory = () => {
+const CreateBrand = () => {
   const dispatch = useDispatch();
-  //   const [name, setName] = useState("");
-  //   const [description, setDescription] = useState("");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const categoryCreate = useSelector((state) => state.categoryCreate);
   const categoryUpdate = useSelector((state) => state.categoryUpdate);
 
-  const { name, description } = categoryUpdate;
+  const { error, category } = categoryCreate;
+
+  const { categoryItemUpdate } = categoryUpdate;
 
   const inputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
   const handleImgChange = (e) => {
     setImageFile(e.target.files[0]);
+    // inputRef.current.value = '';
   };
 
   useEffect(() => {
@@ -35,12 +39,17 @@ const UpdateCategory = () => {
       setDescription("");
       dispatch({ type: CATEGORY_CREATE_RESET });
     }
-  }, [dispatch, category]);
+    if (categoryItemUpdate) {
+      setName(categoryItemUpdate.name);
+      setDescription(categoryItemUpdate.description);
+    }
+  }, [dispatch, category, categoryItemUpdate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(createCategoryAction(name, description, imageFile));
   };
+
   return (
     <>
       <Toast />
