@@ -97,7 +97,7 @@ export const productDeleteAction = (id) => async (dispatch, getState) => {
 
 // [POST] CREATE PRODUCT ACTION BY ADMIN
 export const productCreateAction =
-  (name, price, description, image, countInStock, category) =>
+  (name, price, description, imageFile, category) =>
   async (dispatch, getState) => {
     try {
       dispatch({ type: PRODUCT_CREATE_REQUEST });
@@ -111,10 +111,20 @@ export const productCreateAction =
           Authorization: `Bearer ${userInfo.token}`,
         },
       };
+
+      let formData = new FormData();
+      formData.append("file", imageFile);
+      const dataImage = await axios.post(
+        `${URL}/api/v1/upload/single`, formData,
+        config
+      );
+      const imageUrl = dataImage.data.image;
+      const colors = null;
+
       // use axios.[POST] to create user
       const { data } = await axios.post(
         `${URL}/api/v1/products/create`,
-        { name, price, description, image, countInStock, category },
+        { name, price, description, imageUrl, category, colors },
         config
       );
 
@@ -175,6 +185,16 @@ export const productUpdateAction = (product) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
+
+    let formData = new FormData();
+    formData.append("file", product.imageFile);
+    const dataImage = await axios.post(
+      `${URL}/api/v1/upload/single`, formData,
+      config
+    );
+    product.image = dataImage.data.image;
+
+
     // use axios.[POST] to create user
     const { data } = await axios.put(
       `${URL}/api/v1/products/${product._id}`,

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Toast from "../LoadingError/Toast";
@@ -6,7 +6,21 @@ import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 import { productCreateAction } from "../../redux/actions/ProductAction";
 import { PRODUCT_CREATE_RESET } from "../../redux/constants/ProductConstants";
-import { Button, Heading, Select, Stack, border, TableCaption, Table, Input, Th, Td, Thead, Tr, Tbody } from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  Select,
+  Stack,
+  border,
+  TableCaption,
+  Table,
+  Input,
+  Th,
+  Td,
+  Thead,
+  Tr,
+  Tbody,
+} from "@chakra-ui/react";
 import { categoryListAllAction } from "../../redux/actions/CategoryAction";
 import styled from "@emotion/styled";
 import { event } from "jquery";
@@ -22,10 +36,15 @@ const AddProductMain = () => {
   // Set up state
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
-  const [countInStock, setCountInStock] = useState(0);
   const [category, setCategory] = useState();
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState("");
+  // const [image, setImage] = useState("");
+  const inputRef = useRef(null);
+  const [imageFile, setImageFile] = useState(null);
+  const handleImgChange = (e) => {
+    setImageFile(e.target.files[0])
+    // inputRef.current.value = '';
+};
 
   // Declare Dispatch
   const dispatch = useDispatch();
@@ -35,17 +54,19 @@ const AddProductMain = () => {
   const { categories } = categoryList;
   const { loading, product, error } = productCreate;
 
-  const [itemTypes, setItemTypes] = useState([""])
+  const [itemTypes, setItemTypes] = useState([""]);
 
   const handleItemType = (index, value) => {
     const newItemType = [...itemTypes];
     newItemType[index] = value;
-    newItemType[index + 1] = newItemType[index + 1] ? newItemType[index + 1] : ""
+    newItemType[index + 1] = newItemType[index + 1]
+      ? newItemType[index + 1]
+      : "";
     if (value === "" && index < newItemType.length - 1) {
       newItemType.splice(index, 1);
     }
-    setItemTypes(newItemType)
-  }
+    setItemTypes(newItemType);
+  };
   const [selectedSizes, setSelectedSizes] = useState([]);
   const availableSizes = [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
 
@@ -73,9 +94,9 @@ const AddProductMain = () => {
     setQuantityData(updatedQuantityData);
   };
   useEffect(() => {
-    addQuantity(itemTypes, selectedSizes)
-    console.log(quantityData)
-  }, [itemTypes, selectedSizes])
+    addQuantity(itemTypes, selectedSizes);
+    console.log(quantityData);
+  }, [itemTypes, selectedSizes]);
 
   useEffect(() => {
     dispatch(categoryListAllAction());
@@ -83,9 +104,8 @@ const AddProductMain = () => {
       dispatch({ type: PRODUCT_CREATE_RESET });
       setName("");
       setPrice(0);
-      setCountInStock(0);
       setDescription("");
-      setImage("");
+      setImageFile("");
       setCategory();
     }
   }, [product, dispatch]);
@@ -98,8 +118,7 @@ const AddProductMain = () => {
         name,
         price,
         description,
-        image,
-        countInStock,
+        imageFile,
         category
       )
     );
@@ -197,19 +216,15 @@ const AddProductMain = () => {
                   <div className="mb-4">
                     <label className="form-label">Image</label>
                     <input
-                      className="form-control"
-                      type="text"
-                      placeholder="Inter Image URL"
-                      value={image}
-                      onChange={(e) => setImage(e.target.value)}
-                    />
-                    <input
-                      className="form-control mt-3"
                       type="file"
-                      onChange={(e) =>
-                        setImage(URL.createObjectURL(e.target.files[0]))
-                      }
+                      accept="image/*"
+                      ref={inputRef}
+                      onChange={handleImgChange}
                     />
+                    </div>
+                    
+                    <div>
+                    
                   </div>
                   <div className="mb-4">
                     <div style={{ display: "grid" }}>
@@ -217,27 +232,32 @@ const AddProductMain = () => {
                       <div>
                         {itemTypes.map((itemTpye, index) => (
                           <input
-                            width={'100px'}
+                            width={"100px"}
                             key={index}
                             type="text"
                             value={itemTpye}
                             placeholder="Type here"
                             className="input-item-type"
                             id="type"
-                            onChange={(e) => handleItemType(index, e.target.value)}
-                            required
+                            onChange={(e) =>
+                              handleItemType(index, e.target.value)
+                            }
                           />
-                        ))
-                        }
+                        ))}
                       </div>
                     </div>
                     <div style={{ display: "grid" }}>
                       <label>Phân loại size</label>
-                      <div >
+                      <div>
                         {availableSizes.map((size) => (
                           <button
                             key={size}
-                            className={isSizeSelected(size) ? "button-size-selected" : "button-size"}
+                            className={
+                              isSizeSelected(size)
+                                ? "button-size-selected"
+                                : "button-size"
+                            }
+                            required={false}
                             onClick={() => handleSizeChange(size)}
                           >
                             {size}
@@ -268,16 +288,21 @@ const AddProductMain = () => {
                                       id={`quantity${i}${j}`}
                                       value={quantityData[i][j]}
                                       onChange={(e) => {
-                                        const updatedQuantityData = [...quantityData];
-                                        updatedQuantityData[i][j] = parseInt(e.target.value, 10);
+                                        const updatedQuantityData = [
+                                          ...quantityData,
+                                        ];
+                                        updatedQuantityData[i][j] = parseInt(
+                                          e.target.value,
+                                          10
+                                        );
                                         setQuantityData(updatedQuantityData);
-                                      }} />
-                                  </Td></Tr></>
+                                      }}
+                                    />
+                                  </Td>
+                                </Tr>
+                              </>
                             ))}
                           </>
-
-
-
                         ))}
                       </Tbody>
                     </Table>
@@ -290,7 +315,7 @@ const AddProductMain = () => {
             </div>
           </div>
         </form>
-      </Stack >
+      </Stack>
     </>
   );
 };
