@@ -20,11 +20,8 @@ const CreateCategory = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const categoryCreate = useSelector((state) => state.categoryCreate);
-  const categoryUpdate = useSelector((state) => state.categoryUpdate);
 
   const { error, category } = categoryCreate;
-
-  const { categoryItemUpdate } = categoryUpdate;
 
   const inputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
@@ -39,11 +36,7 @@ const CreateCategory = () => {
       setDescription("");
       dispatch({ type: CATEGORY_CREATE_RESET });
     }
-    if (categoryItemUpdate) {
-      setName(categoryItemUpdate.name);
-      setDescription(categoryItemUpdate.description);
-    }
-  }, [dispatch, category, categoryItemUpdate]);
+  }, [dispatch, category]);
 
   const submitHandler = (e) => {
     e.preventDefault();
@@ -79,28 +72,15 @@ const CreateCategory = () => {
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </div>
-          <div className="mb-4">
+          {/* <div className="mb-4">
             <label className="form-label">Image</label>
-            {/* <input
-              className="form-control"
-              type="text"
-              placeholder="Inter Image URL"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-            /> */}
-            {/* <input
-              className="form-control mt-3"
-              type="file"
-              value={image}
-              onChange={(e) => setImage(URL.createObjectURL(e.target.files[0]))}
-            /> */}
             <input
               type="file"
               accept="image/*"
               ref={inputRef}
               onChange={handleImgChange}
             />
-          </div>
+          </div> */}
 
           <div className="d-grid">
             <BtnPrimary className="py-3" type="submit">

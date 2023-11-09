@@ -14,7 +14,7 @@ const MainCategories = () => {
     <Stack className="content-main">
       <Box className="content-header">
         <Heading as="h2" size="md" className="content-title">
-          Brand
+          Category
         </Heading>
       </Box>
 
@@ -22,9 +22,7 @@ const MainCategories = () => {
         <div className="card-body">
           <div className="row">
             {/* Create category */}
-
             <CreateCategory />
-
             {/* Categories table */}
             <CategoriesTable />
           </div>
