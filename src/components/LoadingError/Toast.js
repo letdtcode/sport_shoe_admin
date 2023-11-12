@@ -11,7 +11,7 @@ export default function Toast() {
         rtl={false}
       />
       {/* Same As  */}
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   );
 }

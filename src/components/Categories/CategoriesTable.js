@@ -9,12 +9,14 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import React, { useEffect } from "react";
+import Toast from "../LoadingError/Toast";
+import "react-toastify/dist/ReactToastify.css";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   categoryDeleteAction,
-  categoryGetItemEditAction,
+  categoryUpdateAction,
   categoryListAllAction,
 } from "../../redux/actions/CategoryAction";
 import "react-toastify/dist/ReactToastify.css";
@@ -27,41 +29,58 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Text,
   Button,
-  Box,
-  Image,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 
-const BtnPrimary = styled.button`
-  padding: 10px 40px;
-  background-color: #333;
-  outline: 1px solid #333;
-  color: white;
-  &:hover {
-    background-color: none;
-  }
-`;
+// const BtnPrimary = styled.button`
+//   padding: 10px 40px;
+//   background-color: #333;
+//   outline: 1px solid #333;
+//   color: white;
+//   &:hover {
+//     background-color: none;
+//   }
+// `;
 
 const CategoriesTable = () => {
   const dispatch = useDispatch();
   const categoryList = useSelector((state) => state.categoryList);
-  const { categoryItemUpdate } = useSelector((state) => state.categoryUpdate);
+  const categoryCreate = useSelector((state) => state.categoryCreate);
+  const { loading } = useSelector((state) => state.categoryUpdate);
 
-  console.log(categoryItemUpdate);
+  const [categoryNameUpdate, setCategoryNameUpdate] = useState();
+  const [descriptionUpdate, setDescriptionUpdate] = useState();
+  const [categoryIdUpdate, setCategoryIdUpdate] = useState();
+
+  // console.log(categoryItemUpdate);
 
   const { categories } = categoryList;
   useEffect(() => {
     dispatch(categoryListAllAction());
-  }, [dispatch]);
+  }, [dispatch, categoryCreate, loading]);
 
   const deleteHandler = (id) => {
     dispatch(categoryDeleteAction(id));
   };
 
-  const updateHandler = (category) => {
-    dispatch(categoryGetItemEditAction(category));
+  const clickPopUpUpdateForm = (category) => {
+    setCategoryNameUpdate(category.categoryName);
+    setDescriptionUpdate(category.description);
+    setCategoryIdUpdate(category._id);
+    // dispatch(categoryGetItemEditAction(category));
+  };
+
+  const submitUpdateHandler = (e) => {
+    // e.preventDefault();
+    // onClose();
+    dispatch(
+      categoryUpdateAction(
+        categoryIdUpdate,
+        categoryNameUpdate,
+        descriptionUpdate
+      )
+    );
   };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -71,6 +90,7 @@ const CategoriesTable = () => {
 
   return (
     <>
+      {/* <Toast /> */}
       <TableContainer className="col-md-12 col-lg-8">
         <Table className="table">
           <Thead>
@@ -95,9 +115,9 @@ const CategoriesTable = () => {
                     <Checkbox type="checkbox" value={category._id} />
                   </Stack>
                 </Td>
-                <Td>{index}</Td>
+                <Td>{index + 1}</Td>
                 <Td>
-                  <b>{category.name}</b>
+                  <b>{category.categoryName}</b>
                 </Td>
                 <Td>{category.description}</Td>
                 <Td className="text-end">
@@ -114,7 +134,7 @@ const CategoriesTable = () => {
                         className="dropdown-item"
                         onClick={() => {
                           onOpen();
-                          updateHandler(category);
+                          clickPopUpUpdateForm(category);
                         }}
                       >
                         Edit information
@@ -155,7 +175,12 @@ const CategoriesTable = () => {
                   placeholder="Type here"
                   className="form-control py-3"
                   id="product_name"
-                  value={categoryItemUpdate?.name}
+                  value={categoryNameUpdate}
+                  required
+                  onInvalid={(e) => {
+                    e.target.setCustomValidity("Vui lòng nhập tên danh mục");
+                  }}
+                  onChange={(e) => setCategoryNameUpdate(e.target.value)}
                 />
               </div>
               <div className="mb-4">
@@ -164,31 +189,13 @@ const CategoriesTable = () => {
                   placeholder="Type here"
                   className="form-control"
                   rows="4"
-                  value={categoryItemUpdate?.description}
+                  value={descriptionUpdate}
+                  required
+                  onInvalid={(e) => {
+                    e.target.setCustomValidity("Vui lòng nhập mô tả danh mục");
+                  }}
+                  onChange={(e) => setDescriptionUpdate(e.target.value)}
                 ></textarea>
-              </div>
-              <Box
-                display="flex"
-                justifyContent="center"
-                borderWidth="1px"
-                alignItems="center"
-                borderRadius="lg"
-                mb="20px"
-              >
-                <Image
-                  boxSize="200px"
-                  src={categoryItemUpdate?.image}
-                  alt="Dan Abramov"
-                />
-              </Box>
-              <div className="mb-4">
-                <input type="file" accept="image/*" />
-              </div>
-
-              <div className="d-grid">
-                <BtnPrimary className="py-3" type="submit">
-                  Add category
-                </BtnPrimary>
               </div>
             </form>
           </ModalBody>
@@ -197,7 +204,16 @@ const CategoriesTable = () => {
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Đóng
             </Button>
-            <Button variant="ghost">Cập nhật</Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                // onClose();
+                submitUpdateHandler();
+                onClose();
+              }}
+            >
+              Cập nhật
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

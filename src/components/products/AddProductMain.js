@@ -95,7 +95,6 @@ const AddProductMain = () => {
   };
   useEffect(() => {
     addQuantity(itemTypes, selectedSizes);
-    console.log(quantityData);
   }, [itemTypes, selectedSizes]);
 
   useEffect(() => {

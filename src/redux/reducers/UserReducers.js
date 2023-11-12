@@ -10,21 +10,22 @@ import {
 } from "../constants/UserContants";
 
 const stateDefault = {
-  user: {},
-  userInfo: [],
+  userData: {},
 };
 
 // USER LOGIN
-export const userLoginReducer = (state = stateDefault, action) => {
+export const userLoginReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
       return {
+        // ...state,
         loading: true,
       };
     case USER_LOGIN_SUCCESS:
       return {
+        // ...state,
         loading: false,
-        userInfo: action.payload,
+        userData: action.payload.userInfo,
       };
     case USER_LOGIN_FAIL:
       return {

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../services/axios";
 import {
   USER_LIST_FAIL,
   USER_LIST_REQUEST,
@@ -11,7 +11,7 @@ import {
 } from "../constants/UserContants";
 import { toast } from "react-toastify";
 import URL from "../../URL";
-
+import { useSelector } from "react-redux";
 // Config Toast
 const ToastObjects = {
   pauseOnFocusLoss: false,
@@ -23,40 +23,33 @@ const ToastObjects = {
 // USER LOGIN
 export const login = (email, password) => async (dispatch) => {
   try {
+    // const userLogin = useSelector((state) => state.userLogin);
+    // const { userData } = userLogin;
     dispatch({ type: USER_LOGIN_REQUEST });
-
-    // Using callback Auth headers config to identify json content
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
     // use axios.[POST] to compare user with server's user,
-    const { data } = await axios.post(
-      `${URL}/api/v1/users/login`,
-      { email, password },
-      config
-    );
-    console.log(data);
-
-    if (!data.isAdmin === true) {
+    const { data } = await axios.post(`${URL}/api/v1/users/login`, {
+      email,
+      password,
+    });
+    if (!data.userInfo.isAdmin === true) {
       toast.error("You are not allowed to be access here", ToastObjects);
       dispatch({ type: USER_LOGIN_FAIL });
     } else {
       dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
       document.location.href = "/";
     }
-
+    // console.log(userData);
     // Update User Info with Server's User in localStorage
-    localStorage.setItem("userInfo", JSON.stringify(data));
+    localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
+    localStorage.setItem("refreshToken", JSON.stringify(data.refreshToken));
   } catch (error) {
+    console.log("loi nay", error);
     const message =
       error.response && error.response.data.message
         ? error.response.data.message
         : error.message;
     if (message === "Not authorized, no token") {
-      dispatch(logout());
+      // dispatch(logout());
     }
     dispatch({
       type: USER_LOGIN_FAIL,
@@ -81,19 +74,8 @@ export const userListAction = () => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_LIST_REQUEST });
 
-    // Using callback Auth headers config to identify json content
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.accessToken}`,
-      },
-    };
-
     // use axios.[POST] to compare user with server's user,
-    const { data } = await axios.get(`${URL}/api/v1/users`, config);
+    const { data } = await axios.get(`${URL}/api/v1/users`);
     dispatch({ type: USER_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../../services/axios";
 import {
   PRODUCT_CREATE_FAIL,
   PRODUCT_CREATE_REQUEST,
@@ -30,23 +30,12 @@ const ToastObjects = {
 export const productListAllAction =
   (keywords = "", pageNumber = "") =>
   async (dispatch, getState) => {
-    console.log("dcm");
     try {
-      const {
-        userLogin: { userInfo },
-      } = getState();
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userInfo.accessToken}`,
-        },
-      };
-      console.log(keywords);
-      console.log(pageNumber);
+      // console.log(keywords);
+      // console.log(pageNumber);
       dispatch({ type: PRODUCT_LIST_REQUEST });
       const { data } = await axios.get(
-        `${URL}/api/v1/products/all?keyword=${keywords}&pageNumber=${pageNumber}`,
-        config
+        `${URL}/api/v1/products/all?keyword=${keywords}&pageNumber=${pageNumber}`
       );
       dispatch({
         type: PRODUCT_LIST_SUCCESS,
@@ -67,18 +56,8 @@ export const productListAllAction =
 export const productDeleteAction = (id) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_DELETE_REQUEST });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.accessToken}`,
-      },
-    };
     // use axios.[GET] to compare user with server's user,
-    await axios.delete(`${URL}/api/v1/products/${id}/delete`, config);
+    await axios.delete(`${URL}/api/v1/products/${id}/delete`);
 
     dispatch({ type: PRODUCT_DELETE_SUCCESS });
     toast.success("Product deletion successful!", ToastObjects);
@@ -103,32 +82,24 @@ export const productCreateAction =
     try {
       dispatch({ type: PRODUCT_CREATE_REQUEST });
 
-      const {
-        userLogin: { userInfo },
-      } = getState();
-
-      const config = {
-        headers: {
-          Authorization: `Bearer ${userInfo.accessToken}`,
-        },
-      };
-
       let formData = new FormData();
       formData.append("file", imageFile);
       const dataImage = await axios.post(
         `${URL}/api/v1/upload/single`,
-        formData,
-        config
+        formData
       );
       const imageUrl = dataImage.data.image;
       const colors = null;
 
       // use axios.[POST] to create user
-      const { data } = await axios.post(
-        `${URL}/api/v1/products/create`,
-        { name, price, description, imageUrl, category, colors },
-        config
-      );
+      const { data } = await axios.post(`${URL}/api/v1/products/create`, {
+        name,
+        price,
+        description,
+        imageUrl,
+        category,
+        colors,
+      });
 
       dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data });
       toast.success("Create successful products!", ToastObjects);
@@ -138,7 +109,7 @@ export const productCreateAction =
           ? error.response.data.message
           : error.message;
       if (message === "Not authorized, no token") {
-        dispatch(logout());
+        // dispatch(logout());
       }
       dispatch({
         type: PRODUCT_CREATE_FAIL,
@@ -155,7 +126,6 @@ export const productEditAction = (id) => async (dispatch) => {
 
     // use axios.[POST] to create user
     const { data } = await axios.get(`${URL}/api/v1/products/${id}`);
-
     dispatch({ type: PRODUCT_EDIT_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -163,7 +133,7 @@ export const productEditAction = (id) => async (dispatch) => {
         ? error.response.data.message
         : error.message;
     if (message === "Not authorized, no token") {
-      dispatch(logout());
+      // dispatch(logout());
     }
     dispatch({
       type: PRODUCT_EDIT_FAIL,
@@ -176,32 +146,15 @@ export const productEditAction = (id) => async (dispatch) => {
 export const productUpdateAction = (product) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_UPDATE_REQUEST });
-
-    const {
-      userLogin: { userInfo },
-    } = getState();
-
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${userInfo.accessToken}`,
-      },
-    };
-
     let formData = new FormData();
     formData.append("file", product.imageFile);
-    const dataImage = await axios.post(
-      `${URL}/api/v1/upload/single`,
-      formData,
-      config
-    );
+    const dataImage = await axios.post(`${URL}/api/v1/upload/single`, formData);
     product.image = dataImage.data.image;
 
     // use axios.[POST] to create user
     const { data } = await axios.put(
       `${URL}/api/v1/products/${product._id}`,
-      product,
-      config
+      product
     );
 
     dispatch({ type: PRODUCT_UPDATE_SUCCESS, payload: data });
@@ -212,7 +165,7 @@ export const productUpdateAction = (product) => async (dispatch, getState) => {
         ? error.response.data.message
         : error.message;
     if (message === "Not authorized, no token") {
-      dispatch(logout());
+      // dispatch(logout());
     }
     dispatch({
       type: PRODUCT_UPDATE_FAIL,

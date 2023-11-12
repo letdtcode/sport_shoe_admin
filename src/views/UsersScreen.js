@@ -6,7 +6,6 @@ import UserComponent from "../components/users/UserComponent";
 const UsersScreen = ({ match }) => {
   const pageNumber = match.params.pageNumber;
   const keyword = match.params.keyword;
-  console.log(pageNumber);
   return (
     <>
       <Sidebar />

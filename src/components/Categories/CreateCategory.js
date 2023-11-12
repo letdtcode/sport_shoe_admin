@@ -40,12 +40,12 @@ const CreateCategory = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(createCategoryAction(name, description, imageFile));
+    dispatch(createCategoryAction(name, description));
   };
 
   return (
     <>
-      <Toast />
+      {/* <Toast /> */}
       {error && <Message variant="alert-danger">{error}</Message>}
       <div className="col-md-12 col-lg-4">
         <form onSubmit={submitHandler}>

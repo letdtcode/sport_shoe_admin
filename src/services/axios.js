@@ -1,18 +1,17 @@
 import axios from "axios";
-import { getToken, getRefreshToken, updateToken } from "./token";
 
 const instance = axios.create({
   baseURL: "http://localhost:8080/api/v1",
   timeout: 50000,
-  validateStatus: function (status) {
-    return status >= 200 && status <= 500;
-  },
+  // validateStatus: function (status) {
+  //   return status >= 200 && status <= 500;
+  // },
 });
 instance.interceptors.request.use(
   (config) => {
-    const token = getToken();
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
+    const accessToken = JSON.parse(localStorage.getItem("accessToken"));
+    if (accessToken) {
+      config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
     return config;
   },
@@ -26,19 +25,24 @@ instance.interceptors.response.use(
     return res;
   },
   async (err) => {
-    console.log(err);
     const originalConfig = err.config;
 
-    if (originalConfig.url !== "/user/login" && err.response) {
+    if (originalConfig.url !== "/users/login" && err.response) {
       if (err.response.status === 401 && !originalConfig._retry) {
         originalConfig._retry = true;
 
         try {
-          const rs = await instance.post("/user/refresh-token", {
-            refreshToken: getRefreshToken(),
+          const refreshToken = localStorage.getItem("refreshToken");
+          const rs = await instance.post("/users/refresh_token", {
+            refreshToken: refreshToken,
           });
           const { accessToken } = rs.data;
-          updateToken(accessToken);
+
+          // const dispatch = useDispatch();
+          localStorage.setItem("accessToken", JSON.stringify(accessToken));
+          originalConfig.headers.Authorization = `Bearer ${accessToken}`;
+          // dispatch({ type: USER_REFRESH_TOKEN, payload: accessToken });
+          // useUpdateAccessToken(accessToken);
           return instance(originalConfig);
         } catch (_error) {
           return Promise.reject(_error);

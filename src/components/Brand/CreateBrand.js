@@ -2,8 +2,8 @@ import styled from "@emotion/styled";
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Toast from "../LoadingError/Toast";
-import { createCategoryAction } from "../../redux/actions/CategoryAction";
-import { CATEGORY_CREATE_RESET } from "../../redux/constants/CategoryConstant";
+import { createBrandAction } from "../../redux/actions/BrandAction";
+import { BRAND_CREATE_RESET } from "../../redux/constants/BrandConstant";
 import Message from "../LoadingError/Error";
 const BtnPrimary = styled.button`
   padding: 10px 40px;
@@ -19,12 +19,10 @@ const CreateBrand = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const categoryCreate = useSelector((state) => state.categoryCreate);
-  const categoryUpdate = useSelector((state) => state.categoryUpdate);
+  const brandCreate = useSelector((state) => state.brandCreate);
+  const brandUpdate = useSelector((state) => state.brandUpdate);
 
-  const { error, category } = categoryCreate;
-
-  const { categoryItemUpdate } = categoryUpdate;
+  const { error, brand } = brandCreate;
 
   const inputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
@@ -34,20 +32,16 @@ const CreateBrand = () => {
   };
 
   useEffect(() => {
-    if (category) {
+    if (brand) {
       setName("");
       setDescription("");
-      dispatch({ type: CATEGORY_CREATE_RESET });
+      dispatch({ type: BRAND_CREATE_RESET });
     }
-    if (categoryItemUpdate) {
-      setName(categoryItemUpdate.name);
-      setDescription(categoryItemUpdate.description);
-    }
-  }, [dispatch, category, categoryItemUpdate]);
+  }, [dispatch, brand]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(createCategoryAction(name, description, imageFile));
+    dispatch(createBrandAction(name, description, imageFile));
   };
 
   return (
@@ -58,7 +52,7 @@ const CreateBrand = () => {
         <form onSubmit={submitHandler}>
           <div className="mb-4">
             <label htmlFor="product_name" className="form-label">
-              Category's name
+              Brand's name
             </label>
             <input
               type="text"

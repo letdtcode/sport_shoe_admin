@@ -6,10 +6,12 @@ import {
   CATEGORY_DELETE_FAIL,
   CATEGORY_DELETE_REQUEST,
   CATEGORY_DELETE_SUCCESS,
-  CATEGORY_GET_ITEM,
   CATEGORY_LIST_FAIL,
   CATEGORY_LIST_REQUEST,
   CATEGORY_LIST_SUCCESS,
+  CATEGORY_UPDATE_FAIL,
+  CATEGORY_UPDATE_REQUEST,
+  CATEGORY_UPDATE_SUCCESS,
 } from "../constants/CategoryConstant";
 
 export const categoryListAllReducer = (state = { categories: [] }, action) => {
@@ -61,9 +63,19 @@ export const categoryCreateReducer = (state = {}, action) => {
 
 export const categoryUpdateReducer = (state = {}, action) => {
   switch (action.type) {
-    case CATEGORY_GET_ITEM:
+    case CATEGORY_UPDATE_REQUEST:
       return {
-        categoryItemUpdate: action.payload,
+        loading: true,
+      };
+    case CATEGORY_UPDATE_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+      };
+    case CATEGORY_UPDATE_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
       };
     default:
       return state;

@@ -92,7 +92,6 @@ const EditProductMain = (props) => {
   };
   useEffect(() => {
     addQuantity(itemTypes, selectedSizes);
-    console.log(quantityData);
   }, [itemTypes, selectedSizes]);
 
   // Declare Dispatch

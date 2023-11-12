@@ -20,18 +20,19 @@ import { orderListAllAction } from "./redux/actions/OrderAction";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./utils/ChakraUI/theme";
 import { Redirect } from "react-router";
+import BrandScreen from "./views/BrandScreen";
 function App() {
   // * Async all productList and orderList in App, If not => dispatch action will update state alot
-
   const dispatch = useDispatch();
   const userLogin = useSelector((state) => state.userLogin);
-  const { userInfo } = userLogin;
+  const { userData } = userLogin;
   useEffect(() => {
-    if (userInfo && userInfo.isAdmin) {
+    console.log(userData);
+    if (userData && userData?.isAdmin) {
       dispatch(productListAllAction());
       dispatch(orderListAllAction());
     }
-  }, [dispatch, userInfo]);
+  }, [dispatch, userData]);
 
   //! Lưu ý: sắp xếp luồng chạy ưu tiên khi làm filter, pagination, sort....
   return (
@@ -44,7 +45,11 @@ function App() {
               path="/products/all/page/:pageNumber"
               component={ProductScreen}
             />
-            <PrivateRouter path="/products/all" component={ProductScreen} exact />
+            <PrivateRouter
+              path="/products/all"
+              component={ProductScreen}
+              exact
+            />
             <PrivateRouter
               path="/search/:keyword/page/:pageNumber"
               component={ProductScreen}
@@ -54,13 +59,14 @@ function App() {
               path="/product/:id/edit"
               component={ProductEditScreen}
             />
+            <PrivateRouter path="/brand" component={BrandScreen} />
             <PrivateRouter path="/category" component={CategoriesScreen} />
             <PrivateRouter path="/orders" component={OrderScreen} />
             <PrivateRouter path="/order/:id" component={OrderDetailScreen} />
             <PrivateRouter path="/addproduct" component={AddProduct} />
             <PrivateRouter path="/users" component={UsersScreen} />
 
-            {userInfo && userInfo.isAdmin ? (
+            {userData && userData?.isAdmin ? (
               <Redirect to="/" component={HomeScreen} exact />
             ) : (
               <Route path="/login" component={Login} />
