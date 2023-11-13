@@ -9,21 +9,19 @@ import {
   USER_LIST_REQUEST,
 } from "../constants/UserContants";
 
-const stateDefault = {
-  userData: {},
-};
+// const stateDefault = {
+//   userData: {},
+// };
 
 // USER LOGIN
 export const userLoginReducer = (state = {}, action) => {
   switch (action.type) {
     case USER_LOGIN_REQUEST:
       return {
-        // ...state,
         loading: true,
       };
     case USER_LOGIN_SUCCESS:
       return {
-        // ...state,
         loading: false,
         userData: action.payload.userInfo,
       };

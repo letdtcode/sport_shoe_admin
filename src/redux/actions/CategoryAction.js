@@ -45,22 +45,10 @@ export const createCategoryAction =
   (categoryName, description) => async (dispatch, getState) => {
     try {
       dispatch({ type: CATEGORY_CREATE_REQUEST });
-
-      // let formData = new FormData();
-      // formData.append("file", imageFile);
-      // const dataImage = await axios.post(
-      //   `${URL}/api/v1/upload/single`,
-      //   formData,
-      //   config
-      // );
-      // const imageUrl = dataImage.data.image;
-
-      // use axios.[GET] to compare user with server's user,
       const { data } = await axios.post(`${URL}/api/v1/categories`, {
         categoryName,
         description,
       });
-
       dispatch({ type: CATEGORY_CREATE_SUCCESS, payload: data });
       toast.success("Successfully created category!", ToastObjects);
     } catch (error) {

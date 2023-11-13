@@ -26,11 +26,20 @@ export const login = (email, password) => async (dispatch) => {
     // const userLogin = useSelector((state) => state.userLogin);
     // const { userData } = userLogin;
     dispatch({ type: USER_LOGIN_REQUEST });
+    const config = {
+      headers: {
+        "Content-type": "application/json",
+      },
+    };
     // use axios.[POST] to compare user with server's user,
-    const { data } = await axios.post(`${URL}/api/v1/users/login`, {
-      email,
-      password,
-    });
+    const { data } = await axios.post(
+      `${URL}/api/v1/users/login`,
+      {
+        email,
+        password,
+      },
+      config
+    );
     if (!data.userInfo.isAdmin === true) {
       toast.error("You are not allowed to be access here", ToastObjects);
       dispatch({ type: USER_LOGIN_FAIL });
@@ -38,12 +47,9 @@ export const login = (email, password) => async (dispatch) => {
       dispatch({ type: USER_LOGIN_SUCCESS, payload: data });
       document.location.href = "/";
     }
-    // console.log(userData);
-    // Update User Info with Server's User in localStorage
     localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
     localStorage.setItem("refreshToken", JSON.stringify(data.refreshToken));
   } catch (error) {
-    console.log("loi nay", error);
     const message =
       error.response && error.response.data.message
         ? error.response.data.message

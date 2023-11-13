@@ -238,7 +238,6 @@ const EditProductMain = (props) => {
                     <input
                       type="file"
                       accept="image/*"
-                      ref={inputRef}
                       onChange={handleImgChange}
                     />
                   </div>

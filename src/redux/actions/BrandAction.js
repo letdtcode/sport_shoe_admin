@@ -8,10 +8,12 @@ import {
   BRAND_DELETE_FAIL,
   BRAND_DELETE_REQUEST,
   BRAND_DELETE_SUCCESS,
-  BRAND_GET_ITEM,
   BRAND_LIST_FAIL,
   BRAND_LIST_REQUEST,
   BRAND_LIST_SUCCESS,
+  BRAND_UPDATE_REQUEST,
+  BRAND_UPDATE_SUCCESS,
+  BRAND_UPDATE_FAIL,
 } from "../constants/BrandConstant";
 const ToastObjects = {
   pauseOnFocusLoss: false,
@@ -40,7 +42,7 @@ export const brandListAllAction = () => async (dispatch, getState) => {
 };
 
 export const createBrandAction =
-  (name, description, imageFile) => async (dispatch, getState) => {
+  (name, origin, imageFile) => async (dispatch, getState) => {
     try {
       dispatch({ type: BRAND_CREATE_REQUEST });
 
@@ -54,8 +56,8 @@ export const createBrandAction =
 
       // use axios.[GET] to compare user with server's user,
       const { data } = await axios.post(`${URL}/api/v1/brands`, {
-        name,
-        description,
+        brandName: name,
+        origin,
         imageUrl,
       });
 
@@ -74,12 +76,39 @@ export const createBrandAction =
     }
   };
 
-export const brandGetItemEditAction = (item) => {
-  return {
-    type: BRAND_GET_ITEM,
-    payload: item,
+export const brandUpdateAction =
+  (id, brandName, origin, imageUrl) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: BRAND_UPDATE_REQUEST });
+      console.log(imageUrl);
+      if (imageUrl instanceof File) {
+        let formData = new FormData();
+        formData.append("file", imageUrl);
+        const { data } = await axios.post(
+          `${URL}/api/v1/upload/single`,
+          formData
+        );
+        imageUrl = data.image;
+      }
+      // use axios.[GET] to compare user with server's user,
+      const { data } = await axios.put(`${URL}/api/v1/brands/${id}`, {
+        brandName,
+        imageUrl,
+        origin,
+      });
+      dispatch({ type: BRAND_UPDATE_SUCCESS, payload: data });
+      toast.success("Brand updated successfully!", ToastObjects);
+    } catch (error) {
+      const message =
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message;
+      dispatch({
+        type: BRAND_UPDATE_FAIL,
+        payload: message,
+      });
+    }
   };
-};
 
 // [GET] GET ALL BRANDS LIST ACTION
 export const brandDeleteAction = (id) => async (dispatch, getState) => {

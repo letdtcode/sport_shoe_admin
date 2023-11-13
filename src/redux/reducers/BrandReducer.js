@@ -6,10 +6,12 @@ import {
   BRAND_DELETE_FAIL,
   BRAND_DELETE_REQUEST,
   BRAND_DELETE_SUCCESS,
-  BRAND_GET_ITEM,
   BRAND_LIST_FAIL,
   BRAND_LIST_REQUEST,
   BRAND_LIST_SUCCESS,
+  BRAND_UPDATE_REQUEST,
+  BRAND_UPDATE_SUCCESS,
+  BRAND_UPDATE_FAIL,
 } from "../constants/BrandConstant";
 
 export const brandListAllReducer = (state = { brands: [] }, action) => {
@@ -61,9 +63,19 @@ export const brandCreateReducer = (state = {}, action) => {
 
 export const brandUpdateReducer = (state = {}, action) => {
   switch (action.type) {
-    case BRAND_GET_ITEM:
+    case BRAND_UPDATE_REQUEST:
       return {
-        brandItemUpdate: action.payload,
+        loading: true,
+      };
+    case BRAND_UPDATE_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+      };
+    case BRAND_UPDATE_FAIL:
+      return {
+        loading: false,
+        error: action.payload,
       };
     default:
       return state;

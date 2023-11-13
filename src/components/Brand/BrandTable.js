@@ -1,4 +1,14 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import {
+  brandDeleteAction,
+  brandListAllAction,
+  brandUpdateAction,
+} from "../../redux/actions/BrandAction";
+import "react-toastify/dist/ReactToastify.css";
+import {
+  Image,
   Checkbox,
   Stack,
   Table,
@@ -8,18 +18,6 @@ import {
   Th,
   Thead,
   Tr,
-} from "@chakra-ui/react";
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import {
-  brandDeleteAction,
-  brandGetItemEditAction,
-  brandListAllAction,
-} from "../../redux/actions/BrandAction";
-import "react-toastify/dist/ReactToastify.css";
-import { useDisclosure } from "@chakra-ui/react";
-import {
   Modal,
   ModalOverlay,
   ModalContent,
@@ -27,50 +25,67 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
-  Text,
   Button,
-  Box,
-  Image,
+  useDisclosure,
 } from "@chakra-ui/react";
-import styled from "@emotion/styled";
-
-const BtnPrimary = styled.button`
-  padding: 10px 40px;
-  background-color: #333;
-  outline: 1px solid #333;
-  color: white;
-  &:hover {
-    background-color: none;
-  }
-`;
 
 const BrandTable = () => {
   const dispatch = useDispatch();
   const brandList = useSelector((state) => state.brandList);
-  const { categoryItemUpdate } = useSelector((state) => state.categoryUpdate);
+  const brandCreate = useSelector((state) => state.brandCreate);
+  const { loading } = useSelector((state) => state.brandUpdate);
 
-  console.log(categoryItemUpdate);
+  const [brandNameUpdate, setBrandNameUpdate] = useState();
+  const [originUpdate, setOriginUpdate] = useState();
+  const [brandIdUpdate, setBrandIdUpdate] = useState();
+  const [urlImage, setUrlImage] = useState(null);
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { brands } = brandList;
-  console.log(brands);
+
+  const [imageFile, setImageFile] = useState(null);
+
+  const handleImgChange = (e) => {
+    setImageFile(e.target.files[0]);
+    setUrlImage(URL.createObjectURL(e.target.files[0]));
+  };
 
   useEffect(() => {
     dispatch(brandListAllAction());
-  }, [dispatch]);
+  }, [dispatch, brandCreate, loading]);
 
   const deleteHandler = (id) => {
     dispatch(brandDeleteAction(id));
   };
 
-  const updateHandler = (category) => {
-    dispatch(brandGetItemEditAction(category));
+  const clickPopUpUpdateForm = (brand) => {
+    setBrandNameUpdate(brand.brandName);
+    setOriginUpdate(brand.origin);
+    setBrandIdUpdate(brand._id);
+    setUrlImage(brand.imageUrl);
   };
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const initialRef = React.useRef(null);
-  const finalRef = React.useRef(null);
-
+  const submitUpdateHandler = (e) => {
+    if (imageFile !== null) {
+      dispatch(
+        brandUpdateAction(
+          brandIdUpdate,
+          brandNameUpdate,
+          originUpdate,
+          imageFile
+        )
+      );
+    } else {
+      dispatch(
+        brandUpdateAction(
+          brandIdUpdate,
+          brandNameUpdate,
+          originUpdate,
+          urlImage
+        )
+      );
+    }
+  };
   return (
     <>
       <TableContainer className="col-md-12 col-lg-8">
@@ -112,22 +127,22 @@ const BrandTable = () => {
                       <i className="fas fa-ellipsis-h"></i>
                     </Link>
                     <div className="dropdown-menu">
-                      <Link
+                      <button
                         className="dropdown-item"
                         onClick={() => {
                           onOpen();
-                          updateHandler(brand);
+                          clickPopUpUpdateForm(brand);
                         }}
                       >
                         Edit information
-                      </Link>
+                      </button>
 
-                      <Link
+                      <button
                         className="dropdown-item text-danger"
                         onClick={() => deleteHandler(brand._id)}
                       >
                         Delete
-                      </Link>
+                      </button>
                     </div>
                   </div>
                 </Td>
@@ -157,7 +172,12 @@ const BrandTable = () => {
                   placeholder="Type here"
                   className="form-control py-3"
                   id="product_name"
-                  value={categoryItemUpdate?.name}
+                  value={brandNameUpdate}
+                  required
+                  onInvalid={(e) => {
+                    e.target.setCustomValidity("Vui lòng nhập tên danh mục");
+                  }}
+                  onChange={(e) => setBrandNameUpdate(e.target.value)}
                 />
               </div>
               <div className="mb-4">
@@ -166,32 +186,37 @@ const BrandTable = () => {
                   placeholder="Type here"
                   className="form-control"
                   rows="4"
-                  value={categoryItemUpdate?.description}
+                  value={originUpdate}
+                  required
+                  onInvalid={(e) => {
+                    e.target.setCustomValidity("Vui lòng nhập mô tả danh mục");
+                  }}
+                  onChange={(e) => setOriginUpdate(e.target.value)}
                 ></textarea>
               </div>
-              <Box
-                display="flex"
-                justifyContent="center"
-                borderWidth="1px"
-                alignItems="center"
-                borderRadius="lg"
-                mb="20px"
-              >
-                <Image
-                  boxSize="200px"
-                  src={categoryItemUpdate?.image}
-                  alt="Dan Abramov"
-                />
-              </Box>
               <div className="mb-4">
-                <input type="file" accept="image/*" />
+                <label className="form-label">Image</label>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image
+                    src={urlImage}
+                    boxSize="150px"
+                    fallbackSrc="https://via.placeholder.com/150"
+                    alt="Dan Abramov"
+                  />
+                </div>
               </div>
-
-              <div className="d-grid">
-                <BtnPrimary className="py-3" type="submit">
-                  Add category
-                </BtnPrimary>
-              </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImgChange}
+                style={{ marginBottom: "15px" }}
+              />
             </form>
           </ModalBody>
 
@@ -199,12 +224,19 @@ const BrandTable = () => {
             <Button colorScheme="blue" mr={3} onClick={onClose}>
               Đóng
             </Button>
-            <Button variant="ghost">Cập nhật</Button>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                submitUpdateHandler();
+                onClose();
+              }}
+            >
+              Cập nhật
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
     </>
   );
 };
-
 export default BrandTable;

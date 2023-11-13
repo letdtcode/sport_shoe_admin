@@ -5,6 +5,8 @@ import Toast from "../LoadingError/Toast";
 import { createBrandAction } from "../../redux/actions/BrandAction";
 import { BRAND_CREATE_RESET } from "../../redux/constants/BrandConstant";
 import Message from "../LoadingError/Error";
+import { Image } from "@chakra-ui/react";
+
 const BtnPrimary = styled.button`
   padding: 10px 40px;
   background-color: #333;
@@ -18,30 +20,28 @@ const BtnPrimary = styled.button`
 const CreateBrand = () => {
   const dispatch = useDispatch();
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [origin, setOrigin] = useState("");
   const brandCreate = useSelector((state) => state.brandCreate);
-  const brandUpdate = useSelector((state) => state.brandUpdate);
-
   const { error, brand } = brandCreate;
-
-  const inputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
+  const [urlImage, setUrlImage] = useState(null);
+
   const handleImgChange = (e) => {
     setImageFile(e.target.files[0]);
-    // inputRef.current.value = '';
+    setUrlImage(URL.createObjectURL(e.target.files[0]));
   };
 
   useEffect(() => {
     if (brand) {
       setName("");
-      setDescription("");
+      setOrigin("");
       dispatch({ type: BRAND_CREATE_RESET });
     }
   }, [dispatch, brand]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(createBrandAction(name, description, imageFile));
+    dispatch(createBrandAction(name, origin, imageFile));
   };
 
   return (
@@ -64,38 +64,39 @@ const CreateBrand = () => {
             />
           </div>
           <div className="mb-4">
-            <label className="form-label">Description</label>
+            <label className="form-label">Origin</label>
             <textarea
               placeholder="Type here"
               className="form-control"
+              style={{ height: "80px" }}
               rows="4"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              value={origin}
+              onChange={(e) => setOrigin(e.target.value)}
             ></textarea>
           </div>
           <div className="mb-4">
             <label className="form-label">Image</label>
-            {/* <input
-              className="form-control"
-              type="text"
-              placeholder="Inter Image URL"
-              value={image}
-              onChange={(e) => setImage(e.target.value)}
-            /> */}
-            {/* <input
-              className="form-control mt-3"
-              type="file"
-              value={image}
-              onChange={(e) => setImage(URL.createObjectURL(e.target.files[0]))}
-            /> */}
-            <input
-              type="file"
-              accept="image/*"
-              ref={inputRef}
-              onChange={handleImgChange}
-            />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Image
+                src={urlImage}
+                boxSize="150px"
+                fallbackSrc="https://via.placeholder.com/150"
+                alt="Dan Abramov"
+              />
+            </div>
           </div>
-
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImgChange}
+            style={{ marginBottom: "15px" }}
+          />
           <div className="d-grid">
             <BtnPrimary className="py-3" type="submit">
               Add category

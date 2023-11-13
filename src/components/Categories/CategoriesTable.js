@@ -9,7 +9,6 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import Toast from "../LoadingError/Toast";
 import "react-toastify/dist/ReactToastify.css";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,17 +30,6 @@ import {
   ModalCloseButton,
   Button,
 } from "@chakra-ui/react";
-import styled from "@emotion/styled";
-
-// const BtnPrimary = styled.button`
-//   padding: 10px 40px;
-//   background-color: #333;
-//   outline: 1px solid #333;
-//   color: white;
-//   &:hover {
-//     background-color: none;
-//   }
-// `;
 
 const CategoriesTable = () => {
   const dispatch = useDispatch();
@@ -53,7 +41,7 @@ const CategoriesTable = () => {
   const [descriptionUpdate, setDescriptionUpdate] = useState();
   const [categoryIdUpdate, setCategoryIdUpdate] = useState();
 
-  // console.log(categoryItemUpdate);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { categories } = categoryList;
   useEffect(() => {
@@ -68,12 +56,9 @@ const CategoriesTable = () => {
     setCategoryNameUpdate(category.categoryName);
     setDescriptionUpdate(category.description);
     setCategoryIdUpdate(category._id);
-    // dispatch(categoryGetItemEditAction(category));
   };
 
   const submitUpdateHandler = (e) => {
-    // e.preventDefault();
-    // onClose();
     dispatch(
       categoryUpdateAction(
         categoryIdUpdate,
@@ -83,14 +68,8 @@ const CategoriesTable = () => {
     );
   };
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const initialRef = React.useRef(null);
-  const finalRef = React.useRef(null);
-
   return (
     <>
-      {/* <Toast /> */}
       <TableContainer className="col-md-12 col-lg-8">
         <Table className="table">
           <Thead>
@@ -130,7 +109,7 @@ const CategoriesTable = () => {
                       <i className="fas fa-ellipsis-h"></i>
                     </Link>
                     <div className="dropdown-menu">
-                      <Link
+                      <button
                         className="dropdown-item"
                         onClick={() => {
                           onOpen();
@@ -138,14 +117,14 @@ const CategoriesTable = () => {
                         }}
                       >
                         Edit information
-                      </Link>
+                      </button>
 
-                      <Link
+                      <button
                         className="dropdown-item text-danger"
                         onClick={() => deleteHandler(category._id)}
                       >
                         Delete
-                      </Link>
+                      </button>
                     </div>
                   </div>
                 </Td>
@@ -207,7 +186,6 @@ const CategoriesTable = () => {
             <Button
               variant="ghost"
               onClick={() => {
-                // onClose();
                 submitUpdateHandler();
                 onClose();
               }}

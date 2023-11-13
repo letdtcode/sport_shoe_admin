@@ -20,15 +20,7 @@ const CreateCategory = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const categoryCreate = useSelector((state) => state.categoryCreate);
-
   const { error, category } = categoryCreate;
-
-  const inputRef = useRef(null);
-  const [imageFile, setImageFile] = useState(null);
-  const handleImgChange = (e) => {
-    setImageFile(e.target.files[0]);
-    // inputRef.current.value = '';
-  };
 
   useEffect(() => {
     if (category) {
@@ -45,7 +37,6 @@ const CreateCategory = () => {
 
   return (
     <>
-      {/* <Toast /> */}
       {error && <Message variant="alert-danger">{error}</Message>}
       <div className="col-md-12 col-lg-4">
         <form onSubmit={submitHandler}>
@@ -72,16 +63,6 @@ const CreateCategory = () => {
               onChange={(e) => setDescription(e.target.value)}
             ></textarea>
           </div>
-          {/* <div className="mb-4">
-            <label className="form-label">Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              ref={inputRef}
-              onChange={handleImgChange}
-            />
-          </div> */}
-
           <div className="d-grid">
             <BtnPrimary className="py-3" type="submit">
               Add category
