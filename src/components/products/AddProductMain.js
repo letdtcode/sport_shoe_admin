@@ -148,6 +148,8 @@ const AddProductMain = () => {
         typeProduct
       )
     );
+    setImageFile(null);
+    setUrlImage(null);
   };
 
   return (

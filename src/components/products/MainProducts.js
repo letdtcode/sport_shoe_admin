@@ -1,48 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Product from "./Product";
 import Loading from "../LoadingError/Loading";
 import { categoryListAllAction } from "../../redux/actions/CategoryAction";
 import Message from "../LoadingError/Error";
-import {
-  Box,
-  Container,
-  Flex,
-  Heading,
-  Input,
-  Select,
-  Stack,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Heading, Select, Stack } from "@chakra-ui/react";
 import Pagination from "../Home/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { productListAllAction } from "../../redux/actions/ProductAction";
 import Toast from "../LoadingError/Toast";
-const MainProducts = ({ keyword, pageNumber }) => {
-  const { loading, error, products, page, pages } = useSelector(
+import { useLocation } from "react-router-dom/cjs/react-router-dom.min";
+
+const MainProducts = () => {
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+
+  const { loading, error, products, pages } = useSelector(
     (state) => state.productList
   );
   const { categories } = useSelector((state) => state.categoryList);
   const productDelete = useSelector((state) => state.productDelete);
   const { loading: successLoading } = productDelete;
   const dispatch = useDispatch();
-  const [category, setCategory] = useState(null);
-  const [keywords, setKeywords] = useState(null);
+
+  const [categoryName, setCategoryName] = useState(
+    query.get("categoryName") || ""
+  );
+  const [keyword, setKeyword] = useState(query.get("keyword") || "");
+  const page = query.get("pageNumber") || 1;
 
   const handlerChangeCategory = (keyword, categoryName) => {
-    productListAllAction(keyword, categoryName, 1);
-  };
-
-  const history = useHistory();
-
-  const handleRedirect = () => {
-    history.push("/products/all"); // Chuyển hướng đến '/products/all'
+    dispatch(productListAllAction(keyword, categoryName, page));
   };
 
   useEffect(() => {
-    dispatch(productListAllAction(keyword, pageNumber));
+    console.log(keyword);
+    dispatch(productListAllAction(keyword, categoryName, page));
     dispatch(categoryListAllAction());
-    setCategory();
-  }, [dispatch, keyword, pageNumber, category]);
+  }, [dispatch, keyword, categoryName, page]);
   return (
     <>
       <Toast />
@@ -62,23 +57,18 @@ const MainProducts = ({ keyword, pageNumber }) => {
           <header className="card-header bg-white ">
             <div className="row gx-3 py-3">
               <div className="col-lg-4 col-md-6 me-auto ">
-                <div class="col-search">
-                  <form class="searchform">
-                    <div class="input-group">
-                      <Input
-                        type="search"
+                <div className="col-search">
+                  <form className="searchform">
+                    <div className="input-group">
+                      <input
+                        type="text"
                         placeholder="Search..."
                         className="form-control p-2"
-                        value={keywords}
-                        onChange={(e) => setKeywords(e.target.value)}
+                        value={keyword}
+                        onChange={(e) => {
+                          setKeyword(e.target.value);
+                        }}
                       />
-                      <button
-                        className="btn btn-light bg"
-                        type="button"
-                        onClick={handleRedirect}
-                      >
-                        <i className="far fa-search"></i>
-                      </button>
                     </div>
                   </form>
                 </div>
@@ -89,21 +79,21 @@ const MainProducts = ({ keyword, pageNumber }) => {
               <div className="col-lg-2 col-6 col-md-3">
                 <Select
                   placeholder="Select category"
-                  value={category}
+                  value={categoryName}
                   onChange={(e) => {
-                    setCategory(e.target.value);
-                    handlerChangeCategory(e.target.value);
+                    setCategoryName(e.target.value);
+                    handlerChangeCategory(keyword, e.target.value);
                   }}
                 >
                   {categories?.map((item) => (
-                    <option key={item._id} value={item._id}>
+                    <option key={item._id} value={item.categoryName}>
                       {item.categoryName}
                     </option>
                   ))}
                 </Select>
               </div>
               <div className="col-lg-2 col-6 col-md-3">
-                <Select>
+                <Select value="jaa">
                   <option>Latest added</option>
                   <option>Lowest price</option>
                   <option>Most view</option>
@@ -129,7 +119,8 @@ const MainProducts = ({ keyword, pageNumber }) => {
                 <Pagination
                   page={page}
                   pages={pages}
-                  keyword={keyword ? keywords : ""}
+                  keyword={keyword ? keyword : ""}
+                  categoryName={categoryName ? categoryName : ""}
                 />
               </div>
             )}

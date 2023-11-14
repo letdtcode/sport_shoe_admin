@@ -1,8 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function Pagination(props) {
-  const { page, pages, keyword = "" } = props;
+export default function Pagination({
+  page,
+  pages,
+  keyword = "",
+  categoryName = "",
+}) {
   return (
     pages > 1 && (
       <nav>
@@ -10,16 +14,16 @@ export default function Pagination(props) {
           {[...Array(pages).keys()].map((x) => (
             <>
               <li
-                className={`page-item ${x + 1 === page ? "active" : ""}`}
+                className={`page-item ${
+                  x + 1 === parseInt(page) ? "active" : ""
+                }`}
                 key={x + 1}
               >
                 <Link
                   className="page-link"
-                  to={
-                    keyword
-                      ? `/search/${keyword}/page/${x + 1}`
-                      : `/products/all/page/${x + 1}`
-                  }
+                  to={`/products/all/?keyword=${keyword}&pageNumber=${
+                    x + 1
+                  }&categoryName=${categoryName}`}
                 >
                   {x + 1}
                 </Link>

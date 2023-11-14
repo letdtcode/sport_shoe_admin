@@ -27,7 +27,7 @@ const ToastObjects = {
 };
 // [GET] GET ALL PRODUCT LIST ACTION
 export const productListAllAction =
-  (keywords = "", categoryName = "", pageNumber = "") =>
+  (keywords = "", categoryName = "", pageNumber = 1) =>
   async (dispatch, getState) => {
     try {
       // console.log(keywords);
