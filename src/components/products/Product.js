@@ -40,11 +40,11 @@ const Product = (props) => {
                   to={`/product/${product._id}/edit`}
                   className="title text-truncate"
                 >
-                  {product.name}
+                  {product.productName}
                 </Link>
                 <div className="price mb-2">${product.price}</div>
                 <Text fontSize="12px" className="my-1 title">
-                  Category: {product.category}
+                  Category: {product.categoryName}
                 </Text>
                 <div className="row d-flex justify-content-evenly">
                   <Link

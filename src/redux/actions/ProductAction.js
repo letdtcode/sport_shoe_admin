@@ -27,14 +27,14 @@ const ToastObjects = {
 };
 // [GET] GET ALL PRODUCT LIST ACTION
 export const productListAllAction =
-  (keywords = "", pageNumber = "") =>
+  (keywords = "", categoryName = "", pageNumber = "") =>
   async (dispatch, getState) => {
     try {
       // console.log(keywords);
       // console.log(pageNumber);
       dispatch({ type: PRODUCT_LIST_REQUEST });
       const { data } = await axios.get(
-        `/products/all?keyword=${keywords}&pageNumber=${pageNumber}`
+        `/products/all?keyword=${keywords}&categoryName=${categoryName}&pageNumber=${pageNumber}`
       );
       dispatch({
         type: PRODUCT_LIST_SUCCESS,

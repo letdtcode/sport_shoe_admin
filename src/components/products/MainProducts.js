@@ -17,21 +17,19 @@ import Pagination from "../Home/Pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { productListAllAction } from "../../redux/actions/ProductAction";
 import Toast from "../LoadingError/Toast";
-const MainProducts = (props) => {
-  const { keyword, pageNumber } = props;
-  const productList = useSelector((state) => state.productList);
-  const [category, setCategory] = useState();
-  const [keywords, setKeywords] = useState();
-  const { loading, error, products, page, pages } = productList;
+const MainProducts = ({ keyword, pageNumber }) => {
+  const { loading, error, products, page, pages } = useSelector(
+    (state) => state.productList
+  );
+  const { categories } = useSelector((state) => state.categoryList);
   const productDelete = useSelector((state) => state.productDelete);
   const { loading: successLoading } = productDelete;
   const dispatch = useDispatch();
+  const [category, setCategory] = useState(null);
+  const [keywords, setKeywords] = useState(null);
 
-  const categoryList = useSelector((state) => state.categoryList);
-  const { categories } = categoryList;
-
-  const handlerChangeCategory = (categoryName) => {
-    productListAllAction(categoryName, 1);
+  const handlerChangeCategory = (keyword, categoryName) => {
+    productListAllAction(keyword, categoryName, 1);
   };
 
   const history = useHistory();
@@ -41,16 +39,10 @@ const MainProducts = (props) => {
   };
 
   useEffect(() => {
-    dispatch(
-      productListAllAction(
-        keyword ? (keywords ? keywords : keyword) : keywords,
-        pageNumber
-      )
-    );
+    dispatch(productListAllAction(keyword, pageNumber));
     dispatch(categoryListAllAction());
-
     setCategory();
-  }, [dispatch, keyword, keywords, pageNumber, category]);
+  }, [dispatch, keyword, pageNumber, category]);
   return (
     <>
       <Toast />
@@ -105,7 +97,7 @@ const MainProducts = (props) => {
                 >
                   {categories?.map((item) => (
                     <option key={item._id} value={item._id}>
-                      {item.name}
+                      {item.categoryName}
                     </option>
                   ))}
                 </Select>
@@ -137,19 +129,7 @@ const MainProducts = (props) => {
                 <Pagination
                   page={page}
                   pages={pages}
-                  keyword={
-                    keyword
-                      ? keywords
-                        ? keywords
-                        : keyword
-                      : keywords
-                      ? keyword
-                        ? keywords
-                          ? keywords
-                          : keyword
-                        : keywords
-                      : ""
-                  }
+                  keyword={keyword ? keywords : ""}
                 />
               </div>
             )}
