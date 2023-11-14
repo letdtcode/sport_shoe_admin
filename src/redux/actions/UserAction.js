@@ -10,9 +10,7 @@ import {
   USER_LOGOUT,
 } from "../constants/UserContants";
 import { toast } from "react-toastify";
-import URL from "../../URL";
-import { useSelector } from "react-redux";
-// Config Toast
+
 const ToastObjects = {
   pauseOnFocusLoss: false,
   draggable: false,
@@ -33,7 +31,7 @@ export const login = (email, password) => async (dispatch) => {
     };
     // use axios.[POST] to compare user with server's user,
     const { data } = await axios.post(
-      `${URL}/api/v1/users/login`,
+      "/users/login",
       {
         email,
         password,
@@ -81,7 +79,7 @@ export const userListAction = () => async (dispatch, getState) => {
     dispatch({ type: USER_LIST_REQUEST });
 
     // use axios.[POST] to compare user with server's user,
-    const { data } = await axios.get(`${URL}/api/v1/users`);
+    const { data } = await axios.get("/users");
     dispatch({ type: USER_LIST_SUCCESS, payload: data });
   } catch (error) {
     const message =

@@ -1,6 +1,5 @@
 import axios from "../../services/axios";
 import { toast } from "react-toastify";
-import URL from "../../URL";
 import {
   BRAND_CREATE_FAIL,
   BRAND_CREATE_REQUEST,
@@ -26,7 +25,7 @@ export const brandListAllAction = () => async (dispatch, getState) => {
   try {
     dispatch({ type: BRAND_LIST_REQUEST });
     // use axios.[GET] to compare user with server's user,
-    const { data } = await axios.get(`${URL}/api/v1/brands`);
+    const { data } = await axios.get("/brands");
 
     dispatch({ type: BRAND_LIST_SUCCESS, payload: data });
   } catch (error) {
@@ -48,14 +47,11 @@ export const createBrandAction =
 
       let formData = new FormData();
       formData.append("file", imageFile);
-      const dataImage = await axios.post(
-        `${URL}/api/v1/upload/single`,
-        formData
-      );
+      const dataImage = await axios.post("/upload/single", formData);
       const imageUrl = dataImage.data.image;
 
       // use axios.[GET] to compare user with server's user,
-      const { data } = await axios.post(`${URL}/api/v1/brands`, {
+      const { data } = await axios.post("/brands", {
         brandName: name,
         origin,
         imageUrl,
@@ -84,14 +80,11 @@ export const brandUpdateAction =
       if (imageUrl instanceof File) {
         let formData = new FormData();
         formData.append("file", imageUrl);
-        const { data } = await axios.post(
-          `${URL}/api/v1/upload/single`,
-          formData
-        );
+        const { data } = await axios.post("/upload/single", formData);
         imageUrl = data.image;
       }
       // use axios.[GET] to compare user with server's user,
-      const { data } = await axios.put(`${URL}/api/v1/brands/${id}`, {
+      const { data } = await axios.put(`/brands/${id}`, {
         brandName,
         imageUrl,
         origin,
@@ -116,7 +109,7 @@ export const brandDeleteAction = (id) => async (dispatch, getState) => {
     dispatch({ type: BRAND_DELETE_REQUEST });
 
     // use axios.[GET] to compare user with server's user,
-    const { data } = await axios.delete(`${URL}/api/v1/brand/${id}`);
+    const { data } = await axios.delete(`/brand/${id}`);
 
     dispatch({ type: BRAND_DELETE_SUCCESS, payload: data });
     toast.success("Brand deleted successfully!", ToastObjects);

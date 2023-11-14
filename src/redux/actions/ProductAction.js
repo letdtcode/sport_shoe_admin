@@ -18,7 +18,6 @@ import {
 } from "../constants/ProductConstants";
 import { logout } from "../actions/UserAction";
 import { toast } from "react-toastify";
-import URL from "../../URL";
 
 const ToastObjects = {
   pauseOnFocusLoss: false,
@@ -35,7 +34,7 @@ export const productListAllAction =
       // console.log(pageNumber);
       dispatch({ type: PRODUCT_LIST_REQUEST });
       const { data } = await axios.get(
-        `${URL}/api/v1/products/all?keyword=${keywords}&pageNumber=${pageNumber}`
+        `/products/all?keyword=${keywords}&pageNumber=${pageNumber}`
       );
       dispatch({
         type: PRODUCT_LIST_SUCCESS,
@@ -57,7 +56,7 @@ export const productDeleteAction = (id) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_DELETE_REQUEST });
     // use axios.[GET] to compare user with server's user,
-    await axios.delete(`${URL}/api/v1/products/${id}/delete`);
+    await axios.delete(`/products/${id}/delete`);
 
     dispatch({ type: PRODUCT_DELETE_SUCCESS });
     toast.success("Product deletion successful!", ToastObjects);
@@ -77,28 +76,33 @@ export const productDeleteAction = (id) => async (dispatch, getState) => {
 
 // [POST] CREATE PRODUCT ACTION BY ADMIN
 export const productCreateAction =
-  (name, price, description, imageFile, category) =>
+  (
+    productName,
+    price,
+    description,
+    imageFile,
+    categoryName,
+    brandName,
+    typeProduct
+  ) =>
   async (dispatch, getState) => {
     try {
       dispatch({ type: PRODUCT_CREATE_REQUEST });
 
       let formData = new FormData();
       formData.append("file", imageFile);
-      const dataImage = await axios.post(
-        `${URL}/api/v1/upload/single`,
-        formData
-      );
-      const imageUrl = dataImage.data.image;
-      const colors = null;
-
+      const {
+        data: { image },
+      } = await axios.post(`/upload/single`, formData);
       // use axios.[POST] to create user
-      const { data } = await axios.post(`${URL}/api/v1/products/create`, {
-        name,
+      const { data } = await axios.post(`/products/create`, {
+        productName,
         price,
         description,
-        imageUrl,
-        category,
-        colors,
+        imageUrl: image,
+        categoryName,
+        brandName,
+        typeProduct,
       });
 
       dispatch({ type: PRODUCT_CREATE_SUCCESS, payload: data });
@@ -125,7 +129,7 @@ export const productEditAction = (id) => async (dispatch) => {
     dispatch({ type: PRODUCT_EDIT_REQUEST });
 
     // use axios.[POST] to create user
-    const { data } = await axios.get(`${URL}/api/v1/products/${id}`);
+    const { data } = await axios.get(`/products/${id}`);
     dispatch({ type: PRODUCT_EDIT_SUCCESS, payload: data });
   } catch (error) {
     const message =
@@ -148,14 +152,11 @@ export const productUpdateAction = (product) => async (dispatch, getState) => {
     dispatch({ type: PRODUCT_UPDATE_REQUEST });
     let formData = new FormData();
     formData.append("file", product.imageFile);
-    const dataImage = await axios.post(`${URL}/api/v1/upload/single`, formData);
+    const dataImage = await axios.post(`/upload/single`, formData);
     product.image = dataImage.data.image;
 
     // use axios.[POST] to create user
-    const { data } = await axios.put(
-      `${URL}/api/v1/products/${product._id}`,
-      product
-    );
+    const { data } = await axios.put(`/products/${product._id}`, product);
 
     dispatch({ type: PRODUCT_UPDATE_SUCCESS, payload: data });
     dispatch({ type: PRODUCT_EDIT_SUCCESS, payload: data });

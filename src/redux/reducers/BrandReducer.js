@@ -23,6 +23,7 @@ export const brandListAllReducer = (state = { brands: [] }, action) => {
       };
     case BRAND_LIST_SUCCESS:
       return {
+        ...state,
         loading: false,
         brands: action.payload,
       };

@@ -1,11 +1,10 @@
 import axios from "axios";
+import { storePersist } from "../redux/store";
+import URL from "../URL";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8080/api/v1",
+  baseURL: `${URL}`,
   timeout: 50000,
-  // validateStatus: function (status) {
-  //   return status >= 200 && status <= 500;
-  // },
 });
 instance.interceptors.request.use(
   (config) => {
@@ -26,6 +25,7 @@ instance.interceptors.response.use(
     return res;
   },
   async (err) => {
+    const { userData } = storePersist.store.getState().userLogin;
     const originalConfig = err.config;
 
     if (originalConfig.url !== "/users/login" && err.response) {
@@ -33,17 +33,14 @@ instance.interceptors.response.use(
         originalConfig._retry = true;
 
         try {
-          const refreshToken = localStorage.getItem("refreshToken");
+          const refreshToken = JSON.parse(localStorage.getItem("refreshToken"));
           const rs = await instance.post("/users/refresh_token", {
             refreshToken: refreshToken,
+            email: userData.email,
           });
           const { accessToken } = rs.data;
-
-          // const dispatch = useDispatch();
           localStorage.setItem("accessToken", JSON.stringify(accessToken));
           originalConfig.headers.Authorization = `Bearer ${accessToken}`;
-          // dispatch({ type: USER_REFRESH_TOKEN, payload: accessToken });
-          // useUpdateAccessToken(accessToken);
           return instance(originalConfig);
         } catch (_error) {
           return Promise.reject(_error);

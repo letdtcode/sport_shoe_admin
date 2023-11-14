@@ -1,6 +1,5 @@
 import axios from "../../services/axios";
 import { toast } from "react-toastify";
-import URL from "../../URL";
 import {
   CATEGORY_CREATE_FAIL,
   CATEGORY_CREATE_REQUEST,
@@ -26,7 +25,7 @@ export const categoryListAllAction = () => async (dispatch, getState) => {
   try {
     dispatch({ type: CATEGORY_LIST_REQUEST });
     // use axios.[GET] to compare user with server's user,
-    const { data } = await axios.get(`${URL}/api/v1/categories`);
+    const { data } = await axios.get("/categories");
 
     dispatch({ type: CATEGORY_LIST_SUCCESS, payload: data });
   } catch (error) {
@@ -45,7 +44,7 @@ export const createCategoryAction =
   (categoryName, description) => async (dispatch, getState) => {
     try {
       dispatch({ type: CATEGORY_CREATE_REQUEST });
-      const { data } = await axios.post(`${URL}/api/v1/categories`, {
+      const { data } = await axios.post("/categories", {
         categoryName,
         description,
       });
@@ -69,7 +68,7 @@ export const categoryUpdateAction =
     try {
       dispatch({ type: CATEGORY_UPDATE_REQUEST });
       // use axios.[GET] to compare user with server's user,
-      const { data } = await axios.put(`${URL}/api/v1/categories/${id}`, {
+      const { data } = await axios.put(`/categories/${id}`, {
         categoryName,
         description,
       });
@@ -93,7 +92,7 @@ export const categoryDeleteAction = (id) => async (dispatch, getState) => {
   try {
     dispatch({ type: CATEGORY_DELETE_REQUEST });
     // use axios.[GET] to compare user with server's user,
-    const { data } = await axios.delete(`${URL}/api/v1/category/${id}`);
+    const { data } = await axios.delete(`/category/${id}`);
 
     dispatch({ type: CATEGORY_DELETE_SUCCESS, payload: data });
     toast.success("Category deleted successfully!", ToastObjects);

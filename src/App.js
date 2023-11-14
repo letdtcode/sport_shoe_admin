@@ -27,7 +27,6 @@ function App() {
   const userLogin = useSelector((state) => state.userLogin);
   const { userData } = userLogin;
   useEffect(() => {
-    console.log(userData);
     if (userData && userData?.isAdmin) {
       dispatch(productListAllAction());
       dispatch(orderListAllAction());

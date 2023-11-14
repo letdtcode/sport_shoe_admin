@@ -1,18 +1,15 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import Toast from "../LoadingError/Toast";
+import { toast } from "react-toastify";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 import { productCreateAction } from "../../redux/actions/ProductAction";
 import { PRODUCT_CREATE_RESET } from "../../redux/constants/ProductConstants";
 import {
-  Button,
   Heading,
   Select,
   Stack,
-  border,
-  TableCaption,
   Table,
   Input,
   Th,
@@ -20,10 +17,11 @@ import {
   Thead,
   Tr,
   Tbody,
+  Image,
 } from "@chakra-ui/react";
 import { categoryListAllAction } from "../../redux/actions/CategoryAction";
+import { brandListAllAction } from "../../redux/actions/BrandAction";
 import styled from "@emotion/styled";
-import { event } from "jquery";
 
 const BtnPrimary = styled.button`
   padding: 8px 45px;
@@ -32,43 +30,49 @@ const BtnPrimary = styled.button`
   color: white;
 `;
 
+const ToastObjects = {
+  pauseOnFocusLoss: false,
+  draggable: false,
+  pauseOnHover: false,
+  autoClose: 2000,
+};
+
 const AddProductMain = () => {
   // Set up state
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
-  const [category, setCategory] = useState();
+  const [categoryName, setCategoryName] = useState();
+  const [brandName, setBrandName] = useState();
   const [description, setDescription] = useState("");
-  // const [image, setImage] = useState("");
-  const inputRef = useRef(null);
   const [imageFile, setImageFile] = useState(null);
+  const [urlImage, setUrlImage] = useState(null);
+  const dispatch = useDispatch();
+
   const handleImgChange = (e) => {
     setImageFile(e.target.files[0]);
-    // inputRef.current.value = '';
+    setUrlImage(URL.createObjectURL(e.target.files[0]));
   };
 
-  // Declare Dispatch
-  const dispatch = useDispatch();
-  // Call Reducer
   const productCreate = useSelector((state) => state.productCreate);
-  const categoryList = useSelector((state) => state.categoryList);
-  const { categories } = categoryList;
+  const { categories } = useSelector((state) => state.categoryList);
+  const { brands } = useSelector((state) => state.brandList);
   const { loading, product, error } = productCreate;
 
-  const [itemTypes, setItemTypes] = useState([""]);
-
-  const handleItemType = (index, value) => {
-    const newItemType = [...itemTypes];
-    newItemType[index] = value;
-    newItemType[index + 1] = newItemType[index + 1]
-      ? newItemType[index + 1]
-      : "";
-    if (value === "" && index < newItemType.length - 1) {
-      newItemType.splice(index, 1);
-    }
-    setItemTypes(newItemType);
-  };
+  const [itemColors, setItemColors] = useState([""]);
   const [selectedSizes, setSelectedSizes] = useState([]);
   const availableSizes = [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
+  const [quantityData, setQuantityData] = useState([[]]);
+  const handleItemType = (index, value) => {
+    const newItemColors = [...itemColors];
+    newItemColors[index] = value;
+    newItemColors[index + 1] = newItemColors[index + 1]
+      ? newItemColors[index + 1]
+      : "";
+    if (value === "" && index < newItemColors.length - 1) {
+      newItemColors.splice(index, 1);
+    }
+    setItemColors(newItemColors);
+  };
 
   const handleSizeChange = (size) => {
     if (selectedSizes.includes(size)) {
@@ -81,7 +85,6 @@ const AddProductMain = () => {
   };
   const isSizeSelected = (size) => selectedSizes.includes(size);
 
-  const [quantityData, setQuantityData] = useState([[]]);
   const addQuantity = (itemTypes, selectedSizes) => {
     const updatedQuantityData = [];
     for (let i = 0; i < itemTypes.length - 1; i++) {
@@ -94,32 +97,61 @@ const AddProductMain = () => {
     setQuantityData(updatedQuantityData);
   };
   useEffect(() => {
-    addQuantity(itemTypes, selectedSizes);
-  }, [itemTypes, selectedSizes]);
+    addQuantity(itemColors, selectedSizes);
+  }, [itemColors, selectedSizes]);
 
   useEffect(() => {
     dispatch(categoryListAllAction());
+    dispatch(brandListAllAction());
     if (product) {
       dispatch({ type: PRODUCT_CREATE_RESET });
       setName("");
       setPrice(0);
       setDescription("");
-      setImageFile("");
-      setCategory();
+      setImageFile(null);
+      setCategoryName();
     }
   }, [product, dispatch]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-
+    let typeProduct = [];
+    for (let i = 0; i < itemColors.length - 1; i++) {
+      for (let j = 0; j < selectedSizes.length; j++) {
+        if (quantityData[i][j] <= 0) {
+          toast.error("Số lượng sản phẩm phải lớn hơn 0", ToastObjects);
+          return;
+        }
+        typeProduct.push({
+          color: itemColors[i],
+          size: selectedSizes[j],
+          quantity: quantityData[i][j],
+        });
+      }
+    }
+    if (typeProduct.length === 0) {
+      toast.error("Sản phẩm phải có ít nhất 1 phân loại", ToastObjects);
+      return;
+    }
+    if (price === 0) {
+      toast.error("Giá sản phẩm không hợp lệ", ToastObjects);
+      return;
+    }
     dispatch(
-      productCreateAction(name, price, description, imageFile, category)
+      productCreateAction(
+        name,
+        price,
+        description,
+        imageFile,
+        categoryName,
+        brandName,
+        typeProduct
+      )
     );
   };
 
   return (
     <>
-      <Toast />
       <Stack className="content-main" style={{ maxWidth: "1200px" }}>
         <Heading as="h2" size="xl" className="content-title mb-4">
           Add product
@@ -185,12 +217,35 @@ const AddProductMain = () => {
                     </label>
                     <Select
                       placeholder="Choose a category"
-                      value={category}
-                      onChange={(e) => console.log(setCategory(e.target.value))}
+                      value={categoryName}
+                      onChange={(e) => {
+                        setCategoryName(e.target.value);
+                      }}
+                      required
                     >
                       {categories?.map((item) => (
-                        <option key={item._id} value={item._id}>
-                          {item.name}
+                        <option key={item._id} value={item.categoryName}>
+                          {item.categoryName}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+
+                  <div className="mb-4">
+                    <label htmlFor="product_brand" className="form-label">
+                      Brand
+                    </label>
+                    <Select
+                      placeholder="Choose a brand"
+                      value={brandName}
+                      onChange={(e) => {
+                        setBrandName(e.target.value);
+                      }}
+                      required
+                    >
+                      {brands?.map((item) => (
+                        <option key={item._id} value={item.brandName}>
+                          {item.brandName}
                         </option>
                       ))}
                     </Select>
@@ -200,33 +255,54 @@ const AddProductMain = () => {
                     <textarea
                       placeholder="Enter product description"
                       className="form-control"
-                      rows="7"
+                      rows="4"
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
                       required
                     ></textarea>
                   </div>
-                  <div className="mb-4">
+                  {/* <div className="mb-4">
                     <label className="form-label">Image</label>
                     <input
                       type="file"
                       accept="image/*"
-                      ref={inputRef}
                       onChange={handleImgChange}
                     />
+                  </div> */}
+                  <div className="mb-4">
+                    <label className="form-label">Image</label>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Image
+                        src={urlImage}
+                        boxSize="200px"
+                        fallbackSrc="https://via.placeholder.com/150"
+                        alt="Dan Abramov"
+                      />
+                    </div>
                   </div>
-
-                  <div></div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImgChange}
+                    style={{ marginBottom: "15px" }}
+                    required
+                  />
                   <div className="mb-4">
                     <div style={{ display: "grid" }}>
                       <label>Phân loại màu</label>
                       <div>
-                        {itemTypes.map((itemTpye, index) => (
+                        {itemColors.map((itemColor, index) => (
                           <input
                             width={"100px"}
                             key={index}
                             type="text"
-                            value={itemTpye}
+                            value={itemColor}
                             placeholder="Type here"
                             className="input-item-type"
                             id="type"
@@ -271,7 +347,7 @@ const AddProductMain = () => {
                             {type.map((size, j) => (
                               <>
                                 <Tr>
-                                  <Td>{itemTypes[i]}</Td>
+                                  <Td>{itemColors[i]}</Td>
                                   <Td>{selectedSizes[j]}</Td>
                                   <Td>
                                     <Input
@@ -283,9 +359,10 @@ const AddProductMain = () => {
                                           ...quantityData,
                                         ];
                                         updatedQuantityData[i][j] = parseInt(
-                                          e.target.value,
-                                          10
-                                        );
+                                          e.target.value
+                                        )
+                                          ? parseInt(e.target.value)
+                                          : "";
                                         setQuantityData(updatedQuantityData);
                                       }}
                                     />
