@@ -5,6 +5,7 @@ import EditProductMain from "./../components/products/EditproductMain";
 
 const ProductEditScreen = ({ match }) => {
   const productId = match.params.id;
+  console.log(productId);
   return (
     <>
       <Sidebar />

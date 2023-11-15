@@ -104,7 +104,7 @@ export const productEditReducer = (
     case PRODUCT_EDIT_SUCCESS:
       return {
         loading: false,
-        product: action.payload,
+        product: action.payload.product,
       };
     case PRODUCT_EDIT_FAIL:
       return {

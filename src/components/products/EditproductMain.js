@@ -1,5 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
-import Toast from "../LoadingError/Toast";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -11,9 +10,8 @@ import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
 import { PRODUCT_UPDATE_RESET } from "../../redux/constants/ProductConstants";
 import { categoryListAllAction } from "../../redux/actions/CategoryAction";
-import styled from "@emotion/styled";
+import { brandListAllAction } from "../../redux/actions/BrandAction";
 import {
-  Button,
   Heading,
   Select,
   Table,
@@ -23,6 +21,7 @@ import {
   Thead,
   Tr,
   Tbody,
+  Image,
 } from "@chakra-ui/react";
 const ToastObjects = {
   pauseOnFocusLoss: false,
@@ -31,118 +30,125 @@ const ToastObjects = {
   autoClose: 2000,
 };
 
-const BtnPrimary = styled.button`
-  padding: 8px 45px;
-  background-color: #333;
-  font-size: 18px;
-  color: white;
-`;
-
-const EditProductMain = (props) => {
-  const { productId } = props;
-
-  // Set up state
-  const [name, setName] = useState("");
-  const [price, setPrice] = useState(0);
-  const [description, setDescription] = useState("");
-  const inputRef = useRef(null);
-  const [imageFile, setImageFile] = useState(null);
-  const handleImgChange = (e) => {
-    setImageFile(e.target.files[0]);
-    // inputRef.current.value = '';
-  };
-  const [itemTypes, setItemTypes] = useState([""]);
-
-  const handleItemType = (index, value) => {
-    const newItemType = [...itemTypes];
-    newItemType[index] = value;
-    newItemType[index + 1] = newItemType[index + 1]
-      ? newItemType[index + 1]
-      : "";
-    if (value === "" && index < newItemType.length - 1) {
-      newItemType.splice(index, 1);
-    }
-    setItemTypes(newItemType);
-  };
-  const [selectedSizes, setSelectedSizes] = useState([]);
-  const availableSizes = [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
-
-  const handleSizeChange = (size) => {
-    if (selectedSizes.includes(size)) {
-      // Nếu size đã được chọn, loại bỏ nó khỏi danh sách selectedSizes
-      setSelectedSizes(selectedSizes.filter((item) => item !== size));
-    } else {
-      // Nếu size chưa được chọn, thêm nó vào danh sách selectedSizes
-      setSelectedSizes([...selectedSizes, size]);
-    }
-  };
-  const isSizeSelected = (size) => selectedSizes.includes(size);
-
-  const [quantityData, setQuantityData] = useState([[]]);
-  const addQuantity = (itemTypes, selectedSizes) => {
-    const updatedQuantityData = [];
-    for (let i = 0; i < itemTypes.length - 1; i++) {
-      const row = [];
-      for (let j = 0; j < selectedSizes.length; j++) {
-        row.push(0);
-      }
-      updatedQuantityData.push(row);
-    }
-    setQuantityData(updatedQuantityData);
-  };
-  useEffect(() => {
-    addQuantity(itemTypes, selectedSizes);
-  }, [itemTypes, selectedSizes]);
-
+const EditProductMain = ({ productId }) => {
   // Declare Dispatch
   const dispatch = useDispatch();
-  const productEdit = useSelector((state) => state.productEdit);
-  const { loading, error, product } = productEdit;
-  const categoryList = useSelector((state) => state.categoryList);
-  const productUpdate = useSelector((state) => state.productUpdate);
+  const { loading, error, product } = useSelector((state) => state.productEdit);
+  const { categories } = useSelector((state) => state.categoryList);
+  const { brands } = useSelector((state) => state.brandList);
   const {
     error: errorUpdate,
     loading: loadingUpdate,
     success: successUpdate,
-  } = productUpdate;
-  const { categories } = categoryList;
-  const [category, setCategory] = useState(
-    categories?.map((item) => item.name)
-  );
+  } = useSelector((state) => state.productUpdate);
+  console.log(successUpdate);
+  // Declare State
+  const [name, setName] = useState("");
+  // console.log(name);
+  const [price, setPrice] = useState("");
+  const [categoryName, setCategoryName] = useState("");
+  const [brandName, setBrandName] = useState("");
+  const [description, setDescription] = useState("");
+  const [typeProducts, setTypeProducts] = useState([]);
+
+  const [imageFile, setImageFile] = useState(null);
+  const [urlImage, setUrlImage] = useState("");
+
+  const [itemColors, setItemColors] = useState([""]);
+  const [selectedSizes, setSelectedSizes] = useState([]);
+  const availableSizes = [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
+  const isSizeSelected = (size) => selectedSizes.includes(size);
+
+  const handleImgChange = (e) => {
+    setImageFile(e.target.files[0]);
+  };
+
+  const handleItemType = (index, value) => {
+    const newItemColors = [...itemColors];
+    newItemColors[index] = value;
+    newItemColors[index + 1] = newItemColors[index + 1]
+      ? newItemColors[index + 1]
+      : "";
+    if (value === "" && index < newItemColors.length - 1) {
+      newItemColors.splice(index, 1);
+    }
+    setItemColors(newItemColors);
+  };
+
+  const handleSizeChange = (size) => {
+    if (selectedSizes.includes(size)) {
+      setSelectedSizes(selectedSizes.filter((item) => item !== size));
+    } else {
+      setSelectedSizes([...selectedSizes, size]);
+    }
+  };
+
+  const addQuantity = (itemTypes, selectedSizes) => {
+    const updatedQuantityData = [];
+    for (let i = 0; i < itemTypes.length - 1; i++) {
+      for (let j = 0; j < selectedSizes.length; j++) {
+        const item = {
+          color: itemTypes[i],
+          size: selectedSizes[j],
+          quantity: product?.typeProduct[i]?.sizes[j]?.quantity
+            ? product?.typeProduct[i]?.sizes[j]?.quantity
+            : 0,
+        };
+        updatedQuantityData.push(item);
+      }
+    }
+    setTypeProducts(updatedQuantityData);
+  };
+
+  useEffect(() => {
+    addQuantity(itemColors, selectedSizes);
+  }, [itemColors, selectedSizes]);
+
   useEffect(() => {
     dispatch(categoryListAllAction());
+    dispatch(brandListAllAction());
     if (successUpdate) {
       dispatch({ type: PRODUCT_UPDATE_RESET });
       toast.success("Updated Successfully", ToastObjects);
     } else {
-      if (!product.name || product._id !== productId) {
+      if (!product?.productName || product.id !== productId) {
         dispatch(productEditAction(productId));
       } else {
-        setName(product.name);
-        setPrice(product.price);
-        setDescription(product.description);
-        setImageFile(product.image);
-        setCategory(product.category);
+        setName(product?.productName);
+        setPrice(product?.price);
+        setCategoryName(product?.categoryName);
+        setBrandName(product?.brandName);
+        setDescription(product?.description);
+        setUrlImage(product?.image);
+        setItemColors([...product?.typeProduct.map((item) => item.color), ""]);
+        if (product?.typeProduct[0]?.sizes)
+          setSelectedSizes([
+            ...product?.typeProduct[0]?.sizes.map((size) =>
+              parseInt(size.size)
+            ),
+          ]);
       }
     }
   }, [product, dispatch, productId, successUpdate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
+    console.log("haha");
     dispatch(
       productUpdateAction({
         _id: productId,
-        name,
+        productName: name,
         price,
         description,
         imageFile,
-        category,
+        categoryName,
+        brandName,
+        typeProduct: typeProducts,
       })
     );
   };
   return (
     <>
-      <Toast />
       <section className="content-main" style={{ maxWidth: "1200px" }}>
         <form onSubmit={submitHandler}>
           <div className="content-header">
@@ -192,32 +198,37 @@ const EditProductMain = (props) => {
                       required
                     />
                   </div>
-                  {/* <div className="mb-4">
-                    <label htmlFor="product_quantity" className="form-label">
-                      Quantity
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="Type here"
-                      className="form-control"
-                      id="product_quantity"
-                      value={countInStock}
-                      onChange={(e) => setCountInStock(e.target.value)}
-                      required
-                    />
-                  </div> */}
                   <div className="mb-4">
                     <label htmlFor="product_category" className="form-label">
                       Category
                     </label>
                     <Select
                       placeholder="Choose a category"
-                      value={category}
-                      onChange={(e) => console.log(setCategory(e.target.value))}
+                      value={categoryName}
+                      onChange={(e) => setCategoryName(e.target.value)}
                     >
                       {categories?.map((item) => (
-                        <option key={item._id} value={item._id}>
-                          {item.name}
+                        <option key={item._id} value={item.categoryName}>
+                          {item.categoryName}
+                        </option>
+                      ))}
+                    </Select>
+                  </div>
+                  <div className="mb-4">
+                    <label htmlFor="product_brand" className="form-label">
+                      Brand
+                    </label>
+                    <Select
+                      placeholder="Choose a brand"
+                      value={brandName}
+                      onChange={(e) => {
+                        setBrandName(e.target.value);
+                      }}
+                      required
+                    >
+                      {brands?.map((item) => (
+                        <option key={item._id} value={item.brandName}>
+                          {item.brandName}
                         </option>
                       ))}
                     </Select>
@@ -235,24 +246,38 @@ const EditProductMain = (props) => {
                   </div>
                   <div className="mb-4">
                     <label className="form-label">Image</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImgChange}
-                    />
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Image
+                        src={urlImage}
+                        boxSize="200px"
+                        fallbackSrc="https://via.placeholder.com/150"
+                        alt="Dan Abramov"
+                      />
+                    </div>
                   </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImgChange}
+                    style={{ marginBottom: "15px" }}
+                  />
 
-                  <div></div>
                   <div className="mb-4">
                     <div style={{ display: "grid" }}>
                       <label>Phân loại màu</label>
                       <div>
-                        {itemTypes.map((itemTpye, index) => (
+                        {itemColors.map((itemColor, index) => (
                           <input
                             width={"100px"}
                             key={index}
                             type="text"
-                            value={itemTpye}
+                            value={itemColor}
                             placeholder="Type here"
                             className="input-item-type"
                             id="type"
@@ -276,6 +301,7 @@ const EditProductMain = (props) => {
                             }
                             required={false}
                             onClick={() => handleSizeChange(size)}
+                            type="button"
                           >
                             {size}
                           </button>
@@ -292,33 +318,29 @@ const EditProductMain = (props) => {
                         </Tr>
                       </Thead>
                       <Tbody>
-                        {quantityData.map((type, i) => (
+                        {typeProducts.map((typeProduct, i) => (
                           <>
-                            {type.map((size, j) => (
-                              <>
-                                <Tr>
-                                  <Td>{itemTypes[i]}</Td>
-                                  <Td>{selectedSizes[j]}</Td>
-                                  <Td>
-                                    <Input
-                                      type="number"
-                                      id={`quantity${i}${j}`}
-                                      value={quantityData[i][j]}
-                                      onChange={(e) => {
-                                        const updatedQuantityData = [
-                                          ...quantityData,
-                                        ];
-                                        updatedQuantityData[i][j] = parseInt(
-                                          e.target.value,
-                                          10
-                                        );
-                                        setQuantityData(updatedQuantityData);
-                                      }}
-                                    />
-                                  </Td>
-                                </Tr>
-                              </>
-                            ))}
+                            <Tr>
+                              <Td>{typeProduct.color}</Td>
+                              <Td>{typeProduct.size}</Td>
+                              <Td>
+                                <Input
+                                  type="number"
+                                  id={i}
+                                  value={typeProduct.quantity}
+                                  onChange={(e) => {
+                                    const updateTypeProducts = [
+                                      ...typeProducts,
+                                    ];
+                                    updateTypeProducts[i].quantity = parseInt(
+                                      e.target.value,
+                                      10
+                                    );
+                                    setTypeProducts(updateTypeProducts);
+                                  }}
+                                />
+                              </Td>
+                            </Tr>
                           </>
                         ))}
                       </Tbody>
@@ -326,9 +348,6 @@ const EditProductMain = (props) => {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="d-flex justify-content-end">
-              <BtnPrimary type="submit">Publish now</BtnPrimary>
             </div>
           </div>
         </form>

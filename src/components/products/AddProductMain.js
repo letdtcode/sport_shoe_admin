@@ -62,6 +62,7 @@ const AddProductMain = () => {
   const [selectedSizes, setSelectedSizes] = useState([]);
   const availableSizes = [34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45];
   const [quantityData, setQuantityData] = useState([[]]);
+
   const handleItemType = (index, value) => {
     const newItemColors = [...itemColors];
     newItemColors[index] = value;

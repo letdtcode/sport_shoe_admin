@@ -30,8 +30,6 @@ export const productListAllAction =
   (keywords = "", categoryName = "", pageNumber = 1) =>
   async (dispatch, getState) => {
     try {
-      // console.log(keywords);
-      // console.log(pageNumber);
       dispatch({ type: PRODUCT_LIST_REQUEST });
       const { data } = await axios.get(
         `/products/all?keyword=${keywords}&categoryName=${categoryName}&pageNumber=${pageNumber}`
@@ -150,11 +148,14 @@ export const productEditAction = (id) => async (dispatch) => {
 export const productUpdateAction = (product) => async (dispatch, getState) => {
   try {
     dispatch({ type: PRODUCT_UPDATE_REQUEST });
-    let formData = new FormData();
-    formData.append("file", product.imageFile);
-    const dataImage = await axios.post(`/upload/single`, formData);
-    product.image = dataImage.data.image;
-
+    if (product.imageFile) {
+      let formData = new FormData();
+      formData.append("file", product.imageFile);
+      const {
+        data: { image },
+      } = await axios.post(`/upload/single`, formData);
+      product.imageUrl = image;
+    }
     // use axios.[POST] to create user
     const { data } = await axios.put(`/products/${product._id}`, product);
 
