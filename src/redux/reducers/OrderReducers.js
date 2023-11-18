@@ -1,7 +1,7 @@
 import {
-  ORDER_DELETE_FAIL,
-  ORDER_DELETE_REQUEST,
-  ORDER_DELETE_SUCCESS,
+  ORDER_CANCELLED_REQUEST,
+  ORDER_CANCELLED_SUCCESS,
+  ORDER_CANCELLED_FAIL,
   ORDER_DELIVERED_FAIL,
   ORDER_DELIVERED_REQUEST,
   ORDER_DELIVERED_RESET,
@@ -11,6 +11,7 @@ import {
   ORDER_DETAILS_SUCCESS,
   ORDER_LIST_FAIL,
   ORDER_LIST_REQUEST,
+  ORDER_CANCELLED_RESET,
   ORDER_LIST_SUCCESS,
 } from "../constants/OrderConstants";
 
@@ -86,19 +87,20 @@ export const orderDeliveredReducer = (state = {}, action) => {
   }
 };
 
-export const orderDeleteReducer = (state = { order: {} }, action) => {
+export const orderCancelledReducer = (state = { order: {} }, action) => {
   switch (action.type) {
-    case ORDER_DELETE_REQUEST:
+    case ORDER_CANCELLED_RESET:
+      return {};
+    case ORDER_CANCELLED_REQUEST:
       return {
         loading: true,
       };
-    case ORDER_DELETE_SUCCESS:
+    case ORDER_CANCELLED_SUCCESS:
       return {
         loading: false,
         success: true,
-        order: {},
       };
-    case ORDER_DELETE_FAIL:
+    case ORDER_CANCELLED_FAIL:
       return {
         loading: false,
         error: action.payload,

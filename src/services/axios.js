@@ -10,7 +10,7 @@ instance.interceptors.request.use(
   (config) => {
     const accessToken = JSON.parse(localStorage.getItem("accessToken"));
     if (accessToken) {
-      config.headers["Content-Type"] = "application/json";
+      // config.headers["Content-Type"] = "application/json";
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
     return config;

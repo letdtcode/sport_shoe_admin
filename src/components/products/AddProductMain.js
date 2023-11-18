@@ -328,6 +328,7 @@ const AddProductMain = () => {
                                 : "button-size"
                             }
                             required={false}
+                            type="button"
                             onClick={() => handleSizeChange(size)}
                           >
                             {size}

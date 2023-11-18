@@ -1,0 +1,36 @@
+/* ITEMSIDE */
+.itemside {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+.itemside .aside,
+.itemside .left {
+  position: relative;
+  flex-shrink: 0;
+}
+.itemside .info {
+  padding-left: 15px;
+  padding-right: 7px;
+  align-items: center;
+  /* position: absolute; */
+}
+.itemside p {
+  margin-bottom: 0;
+}
+.itemside .title {
+  display: block;
+  margin-bottom: 5px;
+}
+.itemside a.title:hover {
+  color: #333;
+}
+
+a.itemside {
+  color: initial;
+  text-decoration: none;
+}
+a.itemside:hover .title {
+  text-decoration: underline;
+}

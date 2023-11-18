@@ -1,17 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import "./OrderDetail/orderDetailProduct.css";
 
-const OrderDetailProducts = (props) => {
-  const { order } = props;
-
-  const addDecimals = (num) => {
-    return (Math.round(num * 100) / 100).toFixed(0);
-  };
-
-  order.itemsPrice = addDecimals(
-    order.orderItems.reduce((a, b) => a + b.price * b.qty, 0)
-  );
-
+const OrderDetailProducts = ({ order }) => {
   return (
     <table className="table border table-lg">
       <thead>
@@ -28,7 +18,7 @@ const OrderDetailProducts = (props) => {
         {order.orderItems.map((item, index) => (
           <tr key={index}>
             <td>
-              <Link className="itemside" to="#">
+              <div className="itemside">
                 <div className="left">
                   <img
                     src={item.image}
@@ -37,12 +27,25 @@ const OrderDetailProducts = (props) => {
                     className="img-xs"
                   />
                 </div>
-                <div className="info">{item.name} </div>
-              </Link>
+                <div className="info">
+                  <div>{item.name}</div>
+                  <div style={{ color: "gray", fontWeight: 400 }}>
+                    Color: {item.typeProduct.color}
+                  </div>
+                  <div style={{ color: "gray", fontWeight: 400 }}>
+                    Size: {item.typeProduct.size}
+                  </div>
+                </div>
+                {/* <div className="info">Color: {item.typeProduct.color} </div>
+                <div className="info">Size: {item.typeProduct.size} </div> */}
+              </div>
             </td>
             <td>${item.price} </td>
-            <td>{item.qty} </td>
-            <td className="text-end"> ${item.price * item.qty}</td>
+            <td>{item.typeProduct.quantity} </td>
+            <td className="text-end">
+              {" "}
+              ${item.price * item.typeProduct.quantity}
+            </td>
           </tr>
         ))}
 

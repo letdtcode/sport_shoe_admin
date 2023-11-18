@@ -1,7 +1,6 @@
 import React from "react";
 
-const OrderDetailInfo = (props) => {
-  const { order } = props;
+const OrderDetailInfo = ({ order }) => {
   return (
     <div className="row mb-5 order-info-wrap">
       <div className="col-md-6 col-lg-4">
@@ -12,8 +11,8 @@ const OrderDetailInfo = (props) => {
           <div className="text">
             <h6 className="mb-1">Customer</h6>
             <p className="mb-1">
-              {order.user.name} <br />
-              <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
+              {order.user?.name} <br />
+              <a href={`mailto:${order.user?.email}`}>{order.user?.email}</a>
             </p>
           </div>
         </article>

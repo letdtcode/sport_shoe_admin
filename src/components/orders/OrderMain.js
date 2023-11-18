@@ -1,12 +1,27 @@
-import React from "react";
-import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
 import Orders from "./Orders";
 import Loading from "../LoadingError/Loading";
 import Message from "../LoadingError/Error";
+import {
+  orderListAllAction,
+  orderListAllByStatusAction,
+} from "../../redux/actions/OrderAction";
+import { useDispatch, useSelector } from "react-redux";
 import { Box, Heading, Stack, TableContainer } from "@chakra-ui/react";
 const OrderMain = () => {
-  const orderList = useSelector((state) => state.orderList);
-  const { loading, error, orders } = orderList;
+  const { loading, error, orders } = useSelector((state) => state.orderList);
+  const dispatch = useDispatch();
+  const [status, setStatus] = useState("Get all");
+
+  useEffect(() => {
+    dispatch(orderListAllAction());
+  }, [dispatch]);
+
+  const handlerChangeStatusOrder = (status) => {
+    if (status === "Get all") return dispatch(orderListAllAction());
+    dispatch(orderListAllByStatusAction(parseInt(status)));
+  };
+
   return (
     <Stack className="content-main">
       <Box className="content-header">
@@ -26,11 +41,19 @@ const OrderMain = () => {
               />
             </div>
             <div className="col-lg-2 col-6 col-md-3">
-              <select className="form-select">
-                <option>Status</option>
-                <option>Active</option>
-                <option>Disabled</option>
-                <option>View all</option>
+              <select
+                className="form-select"
+                onChange={(e) => {
+                  setStatus(e.target.value);
+                  handlerChangeStatusOrder(e.target.value);
+                }}
+              >
+                <option value="Get all">Status</option>
+                <option value={0}>Awaiting confirm</option>
+                <option value={1}>Awaiting delivery</option>
+                <option value={2}>Delivering</option>
+                <option value={3}>Received</option>
+                <option value={-1}>Cancelled</option>
               </select>
             </div>
             <div className="col-lg-2 col-6 col-md-3">
